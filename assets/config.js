@@ -27,5 +27,8 @@ window.RIFA_CONFIG = {
   // Use true somente se a responsável aceitar esse risco.
   AUTO_CONFIRMAR_COM_COMPROVANTE: false,
 
+  // Link usado no botão "Compartilhar esta rifa no WhatsApp".
+  LINK_RIFA: "https://acecarmorj.github.io/acaoenteamigos/",
+
   API_URL: "https://script.google.com/macros/s/AKfycbxPV_Y1h0k_ZbJl5XsF2fx3v8vx-r-s9mOk5SiaCAtKu3D9Ix5F-smWYPvVfv2g0OoN/exec"
 };
