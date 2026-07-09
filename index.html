@@ -35,7 +35,7 @@
         </div>
         <div>
           <span>Pix</span>
-          <strong id="pixHero">229922848326</strong>
+          <strong id="pixHero">22992848346</strong>
         </div>
         <div>
           <span>Sorteio</span>
@@ -65,7 +65,7 @@
         <div class="pix-box">
           <div>
             <span>Chave Pix</span>
-            <strong id="pixKeyText">229922848326</strong>
+            <strong id="pixKeyText">22992848346</strong>
           </div>
           <button class="button button-blue" type="button" id="copyPixBtn">Copiar Pix</button>
         </div>
@@ -201,8 +201,8 @@
     </div>
   </div>
 
-  <script src="./assets/config.js?v=20260708-share-link-2"></script>
-  <script src="./assets/app.js?v=20260708-share-link-2"></script>
+  <script src="./assets/config.js?v=20260708-pix-whatsapp-1"></script>
+  <script src="./assets/app.js?v=20260708-pix-whatsapp-1"></script>
   <script>
     (function corrigirCompartilhamento() {
       const LINK_RIFA = "https://acecarmorj.github.io/acaoenteamigos/";
@@ -218,18 +218,21 @@
 
         const cfg = window.RIFA_CONFIG || {};
         const valor = Number(cfg.VALOR_NUMERO || 10).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        const pix = String(cfg.PIX_KEY || "229922848326").trim();
+        const pix = String(cfg.PIX_KEY || "22992848346").trim();
         const mensagem = [
-          "Rifa Solidária — Ajude Davi e Vitória",
+          "💙 Rifa Solidária — Ajude Davi e Vitória",
           "",
-          "Estamos realizando uma rifa para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora.",
-          `Valor: ${valor} por número`,
-          `Pix: ${pix}`,
+          "Estamos realizando esta rifa para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora.",
           "",
-          "Escolha seu número pelo link:",
+          `🎟️ Valor: ${valor} por número`,
+          `🏆 Prêmio: ${cfg.PREMIO_RIFA || "A definir"}`,
+          `📅 Sorteio: ${cfg.DATA_SORTEIO || "A definir"}`,
+          `🔑 Chave Pix: ${pix}`,
+          "",
+          "Escolha seu número e participe pelo link:",
           LINK_RIFA,
           "",
-          "Toda ajuda faz a diferença."
+          "Toda ajuda faz a diferença! 🙏"
         ].join("\n");
 
         window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, "_blank", "noopener");

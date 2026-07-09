@@ -430,25 +430,31 @@
 
   function shareRaffle() {
     const message = [
-      "Rifa Solidária — Ajude Davi e Vitória",
+      "💙 Rifa Solidária — Ajude Davi e Vitória",
       "",
-      "Estamos realizando uma rifa para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora.",
-      `Valor: ${formatCurrency(getValuePerNumber())} por número`,
-      `Pix: ${getPixKey()}`,
+      "Estamos realizando esta rifa para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora.",
       "",
-      "Toda ajuda faz a diferença."
+      `🎟️ Valor: ${formatCurrency(getValuePerNumber())} por número`,
+      `🏆 Prêmio: ${CFG.PREMIO_RIFA || "A definir"}`,
+      `📅 Sorteio: ${CFG.DATA_SORTEIO || "A definir"}`,
+      `🔑 Chave Pix: ${getPixKey()}`,
+      "",
+      "Escolha seu número e participe. Toda ajuda faz a diferença! 🙏"
     ].join("\n");
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener");
   }
 
   function buildWhatsAppProofMessage(reservation) {
     return [
-      "Olá, fiz a reserva da Rifa Solidária Davi e Vitória.",
+      "Olá! Fiz uma reserva na Rifa Solidária — Ajude Davi e Vitória.",
+      "",
       `Nome: ${reservation.nome}`,
       `WhatsApp: ${reservation.whatsapp}`,
       `Números escolhidos: ${reservation.numeros.join(", ")}`,
       `Valor total: ${formatCurrency(reservation.total)}`,
-      "Segue o comprovante do Pix."
+      `Chave Pix: ${getPixKey()}`,
+      "",
+      "Já realizei o Pix e estou enviando o comprovante para conferência. Obrigado(a)!"
     ].join("\n");
   }
 
