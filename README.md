@@ -250,3 +250,18 @@ Por isso, ele consegue automatizar:
 Mas não consegue confirmar sozinho se o dinheiro caiu na conta.
 
 Para confirmação bancária real automática, seria necessário contratar ou configurar uma API oficial de pagamento, como banco, Mercado Pago, PagBank, Efí, Asaas ou outro provedor de Pix.
+
+
+## Se a versão online abrir sem visual
+
+Se no GitHub Pages a página aparecer apenas como texto, significa que o GitHub não encontrou os arquivos da pasta `assets` ou a publicação ainda está com cache antigo. Esta versão já tem CSS, imagem e JavaScript embutidos dentro de `index.html` e `admin.html` para evitar esse problema, mas ainda assim é recomendado subir a pasta completa:
+
+```txt
+index.html
+admin.html
+assets/
+apps-script/
+README.md
+```
+
+Depois de enviar os arquivos, aguarde 1 a 3 minutos e atualize a página com `Ctrl + F5` no computador ou limpando/cache/recarregando no celular.
