@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Painel Admin — Rifa Solidária Davi e Vitória</title>
+  <meta name="theme-color" content="#dff0ff" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260708-mobile-3" />
+</head>
+<body class="admin-body">
+  <div class="mobile-app-shell admin-app-shell">
+    <header class="admin-top-card">
+      <span class="mini-pill">🔐 Painel da responsável</span>
+      <h1>Controle da Rifa</h1>
+      <p>Reservas, comprovantes e pagamentos em um painel simples para celular.</p>
+      <a class="button button-blue button-full" href="index.html">Abrir página pública</a>
+    </header>
+
+    <main id="adminLocked" class="soft-card login-card">
+      <div class="card-title-row">
+        <div class="icon-bubble">🔑</div>
+        <div>
+          <h2>Entrar no painel</h2>
+          <p>Digite a senha definida no arquivo config.js.</p>
+        </div>
+      </div>
+
+      <form id="pinForm" class="mobile-form">
+        <label>
+          Senha/PIN
+          <input type="password" id="adminPin" inputmode="numeric" placeholder="Digite o PIN" required />
+        </label>
+        <button class="button button-main button-full" type="submit">Entrar</button>
+      </form>
+      <p id="pinError" class="message-box error" hidden>Senha incorreta.</p>
+    </main>
+
+    <main id="adminPanel" hidden>
+      <section class="admin-metrics-grid">
+        <div class="metric-card wide">
+          <span>Total confirmado</span>
+          <strong id="metricArrecadado">R$ 0,00</strong>
+        </div>
+        <div class="metric-card">
+          <span>Pagos</span>
+          <strong id="metricPagos">0</strong>
+        </div>
+        <div class="metric-card">
+          <span>Comprovantes</span>
+          <strong id="metricComprovantes">0</strong>
+        </div>
+        <div class="metric-card">
+          <span>Reservados</span>
+          <strong id="metricReservados">0</strong>
+        </div>
+        <div class="metric-card">
+          <span>Livres</span>
+          <strong id="metricLivres">0</strong>
+        </div>
+      </section>
+
+      <section class="soft-card admin-tools-card">
+        <div class="card-title-row">
+          <div class="icon-bubble">📋</div>
+          <div>
+            <h2>Reservas</h2>
+            <p>O painel atualiza sozinho e mostra o comprovante assim que for enviado.</p>
+          </div>
+        </div>
+
+        <div class="admin-actions-grid">
+          <button class="button button-main" type="button" id="adminRefreshBtn">Atualizar agora</button>
+          <button class="button button-blue" type="button" id="copyPaidBtn">Copiar pagos</button>
+          <button class="button button-blue" type="button" id="exportCsvBtn">Exportar CSV</button>
+        </div>
+
+        <label class="filter-label">
+          Filtrar por status
+          <select id="statusFilter">
+            <option value="todos">Todos</option>
+            <option value="comprovante">Com comprovante</option>
+            <option value="reservado">Reservados</option>
+            <option value="pago">Pagos</option>
+            <option value="livre">Livres</option>
+          </select>
+        </label>
+
+        <div id="adminMessage" class="message-box" hidden></div>
+        <p class="auto-refresh-note" id="autoRefreshNote">Atualização automática ligada.</p>
+      </section>
+
+      <section class="reservation-list" id="reservasList"></section>
+    </main>
+  </div>
+
+  <script src="./assets/config.js?v=20260708-mobile-3"></script>
+  <script src="./assets/admin.js?v=20260708-mobile-3"></script>
+</body>
+</html>

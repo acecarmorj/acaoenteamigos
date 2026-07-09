@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Rifa Solidária — Ajude Davi e Vitória</title>
+  <meta name="description" content="Rifa Solidária para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora." />
+  <meta name="theme-color" content="#dff0ff" />
+  <link rel="preconnect" href="https://api.qrserver.com" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260708-mobile-3" />
+</head>
+<body class="public-body">
+  <div class="mobile-app-shell">
+    <header class="hero-card">
+      <div class="soft-leaf soft-leaf-a"></div>
+      <div class="soft-leaf soft-leaf-b"></div>
+
+      <div class="hero-topline">
+        <span class="mini-pill">💙 Rifa Solidária</span>
+        <span class="mini-pill mini-pill-light">100 números</span>
+      </div>
+
+      <div class="hero-content">
+        <div>
+          <h1>Ajude Davi e Vitória</h1>
+          <p>
+            Uma corrente de amor para ajudar a mamãe Juliana no transporte até o hospital em Juiz de Fora.
+          </p>
+        </div>
+        <img src="./assets/ilustracao-davi-vitoria.png" alt="Ilustração delicada de duas crianças" class="hero-illustration" />
+      </div>
+
+      <div class="hero-stats">
+        <div>
+          <span>Valor</span>
+          <strong id="valorNumeroHero">R$ 10,00</strong>
+        </div>
+        <div>
+          <span>Pix</span>
+          <strong id="pixHero">229922848326</strong>
+        </div>
+        <div>
+          <span>Sorteio</span>
+          <strong id="dataSorteioHero">A definir</strong>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="soft-card cause-card">
+        <div class="card-title-row">
+          <div class="icon-bubble">🤍</div>
+          <div>
+            <h2>Sobre a rifa</h2>
+            <p>Uma ajuda simples que faz diferença.</p>
+          </div>
+        </div>
+
+        <p class="main-text">
+          Estamos realizando uma Rifa Solidária para ajudar com os custos de transporte da mamãe Juliana,
+          que precisa fazer o trajeto de ida e volta ao hospital, em Juiz de Fora, onde Davi e Vitória estão internados.
+        </p>
+        <p class="support-text">
+          Toda ajuda faz a diferença neste momento tão delicado. Sua colaboração contribuirá para que Juliana possa estar ao lado dos seus filhos durante o tratamento.
+        </p>
+
+        <div class="mini-info-grid">
+          <div><span>Prêmio</span><strong id="premioInfo">A definir</strong></div>
+          <div><span>Responsável</span><strong id="responsavelInfo">Juliana</strong></div>
+        </div>
+
+        <div class="pix-box">
+          <div>
+            <span>Chave Pix</span>
+            <strong id="pixKeyText">229922848326</strong>
+          </div>
+          <button class="button button-blue" type="button" id="copyPixBtn">Copiar Pix</button>
+        </div>
+
+        <button class="button button-whatsapp button-full" type="button" id="shareBtn">Compartilhar esta rifa no WhatsApp</button>
+      </section>
+
+      <section class="soft-card numbers-card">
+        <div class="card-title-row title-with-action">
+          <div class="title-left">
+            <div class="icon-bubble">🔢</div>
+            <div>
+              <h2>Escolha seus números</h2>
+              <p>Toque nos números livres. Pode escolher mais de um.</p>
+            </div>
+          </div>
+          <button class="small-button" type="button" id="refreshBtn">Atualizar</button>
+        </div>
+
+        <div class="legend-mobile">
+          <span><i class="status-dot free"></i>Livre</span>
+          <span><i class="status-dot selected"></i>Seu</span>
+          <span><i class="status-dot reserved"></i>Reservado</span>
+          <span><i class="status-dot paid"></i>Pago</span>
+        </div>
+
+        <div id="statusMessage" class="message-box" hidden></div>
+        <div id="numbersGrid" class="numbers-grid" aria-live="polite"></div>
+
+        <div class="total-card">
+          <div>
+            <span>Selecionados</span>
+            <strong id="selectedNumbersText">Nenhum</strong>
+          </div>
+          <div>
+            <span>Total</span>
+            <strong id="selectedTotalText">R$ 0,00</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="soft-card form-card">
+        <div class="card-title-row">
+          <div class="icon-bubble">📝</div>
+          <div>
+            <h2>Reservar e pagar</h2>
+            <p>Depois de reservar, o app mostra QR Code, Pix copia e cola e envio do comprovante.</p>
+          </div>
+        </div>
+
+        <form id="reserveForm" autocomplete="on" class="mobile-form">
+          <label>
+            Nome completo
+            <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required />
+          </label>
+          <label>
+            WhatsApp
+            <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ex.: 22 99999-9999" required />
+          </label>
+          <label>
+            Observação opcional
+            <textarea id="observacao" name="observacao" rows="3" placeholder="Alguma observação?"></textarea>
+          </label>
+          <button class="button button-main button-full" type="submit" id="reserveBtn">Reservar meus números</button>
+        </form>
+      </section>
+    </main>
+
+    <footer class="soft-card footer-card">
+      <p>
+        Agradecemos de coração a cada pessoa que puder ajudar, seja comprando um número ou compartilhando esta rifa.
+        Que Deus abençoe grandemente a vida de todos!
+      </p>
+      <blockquote>“Porque Deus é o nosso refúgio e fortaleza, socorro bem presente na angústia.” — Salmo 46:1</blockquote>
+      <a href="admin.html" class="admin-link">Painel da responsável</a>
+    </footer>
+  </div>
+
+  <div class="bottom-summary" id="bottomSummary" hidden>
+    <div>
+      <span>Selecionados</span>
+      <strong id="bottomSelectedText">Nenhum</strong>
+    </div>
+    <button class="button button-main" type="button" id="goToFormBtn">Continuar</button>
+  </div>
+
+  <div class="modal" id="successModal" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button>
+
+      <div class="modal-heart">💙</div>
+      <h2 id="modalTitle">Reserva feita!</h2>
+      <p class="modal-subtitle">Agora faça o Pix e envie o comprovante pelo próprio app.</p>
+
+      <div class="payment-summary">
+        <div><span>Números</span><strong id="modalNumbers">—</strong></div>
+        <div><span>Valor total</span><strong id="modalTotal">—</strong></div>
+        <div><span>Chave Pix</span><strong id="modalPixKey">—</strong></div>
+      </div>
+
+      <div class="qr-area">
+        <img id="pixQrCode" alt="QR Code Pix" />
+        <p>Escaneie o QR Code ou copie o Pix copia e cola.</p>
+      </div>
+
+      <label class="copy-paste-label">
+        Pix copia e cola
+        <textarea id="pixCopyPaste" rows="4" readonly></textarea>
+      </label>
+
+      <div class="modal-actions-grid">
+        <button class="button button-blue" type="button" id="copyPixAgainBtn">Copiar chave</button>
+        <button class="button button-blue" type="button" id="copyPixPayloadBtn">Copiar copia e cola</button>
+        <a class="button button-whatsapp" id="openWhatsAppBtn" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+      </div>
+
+      <div class="proof-upload-card">
+        <div class="card-title-row compact-title">
+          <div class="icon-bubble small">📎</div>
+          <div>
+            <h3>Enviar comprovante pelo app</h3>
+            <p>Envie foto ou print do Pix. A responsável vê no painel na hora.</p>
+          </div>
+        </div>
+
+        <label class="file-label">
+          <input type="file" id="proofFile" accept="image/*,.pdf" />
+          <span id="proofFileName">Escolher comprovante ou print</span>
+        </label>
+
+        <button class="button button-main button-full" type="button" id="sendProofBtn">Enviar comprovante</button>
+        <p class="tiny-warning">Por segurança, a confirmação final deve ser conferida no banco pela responsável.</p>
+        <div id="proofMessage" class="message-box" hidden></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./assets/config.js?v=20260708-mobile-3"></script>
+  <script src="./assets/app.js?v=20260708-mobile-3"></script>
+</body>
+</html>
