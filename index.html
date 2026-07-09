@@ -7,7 +7,7 @@
   <meta name="description" content="Rifa Solidária para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora." />
   <meta name="theme-color" content="#dff0ff" />
   <link rel="preconnect" href="https://api.qrserver.com" />
-  <link rel="stylesheet" href="./assets/style.css?v=20260708-share-link-1" />
+  <link rel="stylesheet" href="./assets/style.css?v=20260708-share-link-2" />
 </head>
 <body class="public-body">
   <div class="mobile-app-shell">
@@ -201,37 +201,41 @@
     </div>
   </div>
 
-  <script src="./assets/config.js?v=20260708-share-link-1"></script>
-  <script src="./assets/app.js?v=20260708-share-link-1"></script>
+  <script src="./assets/config.js?v=20260708-share-link-2"></script>
+  <script src="./assets/app.js?v=20260708-share-link-2"></script>
   <script>
     (function corrigirCompartilhamento() {
       const LINK_RIFA = "https://acecarmorj.github.io/acaoenteamigos/";
-      const botaoOriginal = document.getElementById("shareBtn");
-      if (!botaoOriginal) return;
+      const botaoCompartilhar = document.getElementById("shareBtn");
+      if (!botaoCompartilhar) return;
 
-      const botaoNovo = botaoOriginal.cloneNode(true);
-      botaoOriginal.replaceWith(botaoNovo);
+      function abrirCompartilhamento(event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
+        }
 
-      botaoNovo.addEventListener("click", function () {
         const cfg = window.RIFA_CONFIG || {};
         const valor = Number(cfg.VALOR_NUMERO || 10).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
         const pix = String(cfg.PIX_KEY || "229922848326").trim();
         const mensagem = [
-          "💙 Rifa Solidária — Ajude Davi e Vitória",
+          "Rifa Solidária — Ajude Davi e Vitória",
           "",
           "Estamos realizando uma rifa para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora.",
           `Valor: ${valor} por número`,
+          `Pix: ${pix}`,
           "",
           "Escolha seu número pelo link:",
           LINK_RIFA,
-          "",
-          `Pix: ${pix}`,
           "",
           "Toda ajuda faz a diferença."
         ].join("\n");
 
         window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, "_blank", "noopener");
-      });
+      }
+
+      botaoCompartilhar.addEventListener("click", abrirCompartilhamento, true);
     })();
   </script>
 </body>
