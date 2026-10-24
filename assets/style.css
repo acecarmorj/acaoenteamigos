@@ -1,5 +1,5 @@
 /* ========================================================
-   RIFA SOLIDÁRIA DAVI E VITÓRIA — TEMA CLEAN (BRANCO, PRETO, VERMELHO E CINZAS)
+   RIFA HONDA XRE 190 2018 — TEMA CLEAN (BRANCO, PRETO, VERMELHO E CINZAS)
    Design limpo, minimalista, mobile-first e 100% acessível (WCAG AA/AAA).
    Paleta:
      Branco Puro: #ffffff, #fafafa
@@ -819,3 +819,97 @@ body.public-body {
   color: #991b1b;
   border: 1px solid #fecaca;
 }
+
+/* ========================================================
+   NAVEGAÇÃO DE 100 PAINÉIS E BUSCA DE 4 DÍGITOS (0000 A 9999)
+   ======================================================== */
+.panel-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+}
+
+.panel-nav-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.panel-step-btn {
+  min-height: 40px;
+  padding: 0 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.panel-select {
+  width: 100%;
+  min-height: 40px;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-medium);
+  background-color: #ffffff;
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.panel-select:focus,
+.search-number-input:focus {
+  outline: 2px solid var(--red-primary);
+  outline-offset: 1px;
+  border-color: var(--red-primary);
+}
+
+.panel-search-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.search-number-input {
+  width: 100%;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-medium);
+  background-color: #ffffff;
+  color: var(--text-main);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.search-number-btn {
+  min-height: 40px;
+  padding: 0 14px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.panel-meta-row {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.number-chip {
+  font-size: 0.78rem;
+  letter-spacing: -0.02em;
+  padding: 6px 2px;
+}
+
+.number-chip.search-highlight {
+  outline: 2px solid var(--red-primary);
+  outline-offset: 1px;
+}
+

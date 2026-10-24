@@ -3,7 +3,9 @@
 
   const CFG = window.RIFA_CONFIG || {};
   const selectedNumbers = new Set();
-  let currentNumbers = [];
+  const statusMap = new Map();
+  let currentPanelIndex = 0; // 0 to 99 (Painel 01 a 100)
+  let highlightedNumber = null;
   let lastReservation = null;
   let selectedProofFile = null;
 
@@ -17,6 +19,12 @@
     copyPixBtn: document.getElementById("copyPixBtn"),
     shareBtn: document.getElementById("shareBtn"),
     refreshBtn: document.getElementById("refreshBtn"),
+    prevPanelBtn: document.getElementById("prevPanelBtn"),
+    nextPanelBtn: document.getElementById("nextPanelBtn"),
+    panelSelect: document.getElementById("panelSelect"),
+    searchNumberInput: document.getElementById("searchNumberInput"),
+    searchNumberBtn: document.getElementById("searchNumberBtn"),
+    panelMetaText: document.getElementById("panelMetaText"),
     statusMessage: document.getElementById("statusMessage"),
     numbersGrid: document.getElementById("numbersGrid"),
     selectedNumbersText: document.getElementById("selectedNumbersText"),
@@ -48,6 +56,7 @@
 
   function init() {
     applyConfigToPage();
+    initPanelControls();
     bindEvents();
     restoreLastReservation();
     loadNumbers();
@@ -57,9 +66,107 @@
     els.valorNumeroHero.textContent = formatCurrency(getValuePerNumber());
     els.pixHero.textContent = getPixKey();
     els.pixKeyText.textContent = getPixKey();
-    els.dataSorteioHero.textContent = CFG.DATA_SORTEIO || "A definir";
-    els.premioInfo.textContent = CFG.PREMIO_RIFA || "A definir";
-    els.responsavelInfo.textContent = CFG.RESPONSAVEL_NOME || "Juliana";
+    els.dataSorteioHero.textContent = CFG.DATA_SORTEIO || "31/12 (Loteria Federal)";
+    els.premioInfo.textContent = CFG.PREMIO_RIFA || "Honda XRE 190 2018 (seminova)";
+    els.responsavelInfo.textContent = CFG.RESPONSAVEL_NOME || "Welington Santos";
+  }
+
+  function getPanelSize() {
+    return Number(CFG.TAMANHO_PAINEL || 100);
+  }
+
+  function getStartNumber() {
+    return Number.isFinite(Number(CFG.NUMERO_INICIAL)) ? Number(CFG.NUMERO_INICIAL) : 0;
+  }
+
+  function getTotalQuantity() {
+    return Number(CFG.QUANTIDADE_NUMEROS || 10000);
+  }
+
+  function getTotalPanels() {
+    return Math.max(1, Math.ceil(getTotalQuantity() / getPanelSize()));
+  }
+
+  function formatNumberCode(num) {
+    const digits = getTotalQuantity() > 100 ? 4 : 2;
+    return String(num).padStart(digits, "0");
+  }
+
+  function initPanelControls() {
+    if (!els.panelSelect) return;
+    const totalPanels = getTotalPanels();
+    const panelSize = getPanelSize();
+    const startBase = getStartNumber();
+
+    els.panelSelect.innerHTML = "";
+    for (let p = 0; p < totalPanels; p += 1) {
+      const first = startBase + p * panelSize;
+      const last = Math.min(startBase + getTotalQuantity() - 1, first + panelSize - 1);
+      const opt = document.createElement("option");
+      opt.value = String(p);
+      opt.textContent = `Painel ${String(p + 1).padStart(2, "0")} (${formatNumberCode(first)} a ${formatNumberCode(last)})`;
+      els.panelSelect.appendChild(opt);
+    }
+    els.panelSelect.value = String(currentPanelIndex);
+    updatePanelMeta();
+  }
+
+  function updatePanelMeta() {
+    const totalPanels = getTotalPanels();
+    const panelSize = getPanelSize();
+    const startBase = getStartNumber();
+    const first = startBase + currentPanelIndex * panelSize;
+    const last = Math.min(startBase + getTotalQuantity() - 1, first + panelSize - 1);
+
+    let freeCount = 0;
+    for (let n = first; n <= last; n += 1) {
+      const info = statusMap.get(n);
+      if (!info || info.status === "livre") freeCount += 1;
+    }
+
+    if (els.panelSelect) els.panelSelect.value = String(currentPanelIndex);
+    if (els.prevPanelBtn) els.prevPanelBtn.disabled = currentPanelIndex <= 0;
+    if (els.nextPanelBtn) els.nextPanelBtn.disabled = currentPanelIndex >= totalPanels - 1;
+    if (els.panelMetaText) {
+      els.panelMetaText.textContent = `Painel ${String(currentPanelIndex + 1).padStart(2, "0")} de ${totalPanels} • Cotas ${formatNumberCode(first)} a ${formatNumberCode(last)} (${freeCount} livres)`;
+    }
+  }
+
+  function setPanel(index) {
+    const totalPanels = getTotalPanels();
+    currentPanelIndex = Math.max(0, Math.min(totalPanels - 1, Number(index) || 0));
+    renderNumbers();
+    updatePanelMeta();
+  }
+
+  function handleSearchNumber() {
+    if (!els.searchNumberInput) return;
+    const raw = els.searchNumberInput.value.replace(/\D/g, "");
+    if (!raw) {
+      showMessage("Digite um número de 0000 a 9999 para buscar.", "info");
+      return;
+    }
+    const num = Number(raw);
+    const startBase = getStartNumber();
+    const maxNum = startBase + getTotalQuantity() - 1;
+    if (!Number.isFinite(num) || num < startBase || num > maxNum) {
+      showMessage(`Número inválido. Digite entre ${formatNumberCode(startBase)} e ${formatNumberCode(maxNum)}.`, "error");
+      return;
+    }
+
+    const panelIndex = Math.floor((num - startBase) / getPanelSize());
+    highlightedNumber = num;
+    setPanel(panelIndex);
+
+    const item = getNumberInfo(num);
+    if (item.status === "livre") {
+      selectedNumbers.add(num);
+      renderNumbers();
+      updateSelectionSummary();
+      showMessage(`Cota ${formatNumberCode(num)} localizada no Painel ${String(panelIndex + 1).padStart(2, "0")} e selecionada!`, "success");
+    } else {
+      showMessage(`A cota ${formatNumberCode(num)} está ${item.status}. Exibindo no Painel ${String(panelIndex + 1).padStart(2, "0")}.`, "error");
+    }
   }
 
   function bindEvents() {
@@ -70,6 +177,19 @@
     els.refreshBtn.addEventListener("click", loadNumbers);
     els.reserveForm.addEventListener("submit", handleReservation);
     els.goToFormBtn.addEventListener("click", () => document.querySelector(".form-card").scrollIntoView({ behavior: "smooth", block: "start" }));
+
+    if (els.prevPanelBtn) els.prevPanelBtn.addEventListener("click", () => setPanel(currentPanelIndex - 1));
+    if (els.nextPanelBtn) els.nextPanelBtn.addEventListener("click", () => setPanel(currentPanelIndex + 1));
+    if (els.panelSelect) els.panelSelect.addEventListener("change", () => setPanel(Number(els.panelSelect.value)));
+    if (els.searchNumberBtn) els.searchNumberBtn.addEventListener("click", handleSearchNumber);
+    if (els.searchNumberInput) {
+      els.searchNumberInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          handleSearchNumber();
+        }
+      });
+    }
 
     els.proofFile.addEventListener("change", () => {
       selectedProofFile = els.proofFile.files && els.proofFile.files[0] ? els.proofFile.files[0] : null;
@@ -88,82 +208,89 @@
   async function loadNumbers() {
     try {
       setLoading(true);
-      showMessage("Carregando a cartela...", "info");
+      showMessage("Carregando cotas...", "info");
       const response = await apiCall("listar", {});
-      currentNumbers = normalizeNumbers(response.numeros || []);
-      selectedNumbers.clear();
+      normalizeNumbers(response.numeros || []);
       renderNumbers();
+      updatePanelMeta();
       updateSelectionSummary();
       if (isDemoMode()) showMessage("Modo teste local: configure a URL do Apps Script para usar a planilha.", "info");
       else hideMessage();
     } catch (error) {
       console.error(error);
       showMessage(error.message || "Não foi possível carregar os números.", "error");
-      currentNumbers = normalizeNumbers([]);
+      normalizeNumbers([]);
       renderNumbers();
+      updatePanelMeta();
     } finally {
       setLoading(false);
     }
   }
 
   function normalizeNumbers(rows) {
-    const byNumber = new Map();
+    statusMap.clear();
+    const startBase = getStartNumber();
+    const maxNum = startBase + getTotalQuantity() - 1;
+
     (rows || []).forEach((row) => {
       const numero = Number(row.numero);
-      if (!Number.isFinite(numero)) return;
-      byNumber.set(numero, {
+      if (!Number.isFinite(numero) || numero < startBase || numero > maxNum) return;
+      const status = normalizeStatus(row.status);
+      if (status === "livre" && !row.comprovante_url) return;
+      statusMap.set(numero, {
         numero,
-        status: normalizeStatus(row.status),
-        nome: row.nome || "",
-        whatsapp: row.whatsapp || "",
-        valor: Number(row.valor || 0),
-        data_reserva: row.data_reserva || "",
-        data_pagamento: row.data_pagamento || "",
-        observacao: row.observacao || "",
-        comprovante_url: row.comprovante_url || "",
-        data_comprovante: row.data_comprovante || ""
+        status,
+        comprovante_url: row.comprovante_url || ""
       });
     });
+  }
 
-    const total = getTotalQuantity();
-    const normalized = [];
-    for (let i = 1; i <= total; i += 1) {
-      normalized.push(byNumber.get(i) || { numero: i, status: "livre" });
-    }
-    return normalized;
+  function getNumberInfo(numero) {
+    return statusMap.get(numero) || { numero, status: "livre", comprovante_url: "" };
   }
 
   function renderNumbers() {
     els.numbersGrid.innerHTML = "";
+    const panelSize = getPanelSize();
+    const startBase = getStartNumber();
+    const first = startBase + currentPanelIndex * panelSize;
+    const last = Math.min(startBase + getTotalQuantity() - 1, first + panelSize - 1);
+    const frag = document.createDocumentFragment();
 
-    currentNumbers.forEach((item) => {
+    for (let num = first; num <= last; num += 1) {
+      const item = getNumberInfo(num);
+      const code = formatNumberCode(num);
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "number-chip";
-      btn.textContent = String(item.numero).padStart(2, "0");
-      btn.setAttribute("aria-label", `Número ${item.numero}, ${item.status}`);
+      btn.textContent = code;
+      btn.setAttribute("aria-label", `Cota ${code}, ${item.status}`);
 
       const isBusy = item.status === "reservado" || item.status === "pago";
-      if (selectedNumbers.has(item.numero)) btn.classList.add("selected");
+      if (selectedNumbers.has(num)) btn.classList.add("selected");
       if (item.status === "reservado") btn.classList.add("reserved");
       if (item.status === "pago") btn.classList.add("paid");
       if (item.comprovante_url && item.status !== "pago") btn.classList.add("proof-sent");
+      if (highlightedNumber === num) btn.classList.add("search-highlight");
       btn.disabled = isBusy;
-      btn.addEventListener("click", () => toggleNumber(item.numero));
-      els.numbersGrid.appendChild(btn);
-    });
+      btn.addEventListener("click", () => toggleNumber(num));
+      frag.appendChild(btn);
+    }
+    els.numbersGrid.appendChild(frag);
   }
 
   function toggleNumber(numero) {
-    const item = currentNumbers.find((row) => row.numero === numero);
+    const item = getNumberInfo(numero);
+    const code = formatNumberCode(numero);
     if (!item || item.status !== "livre") {
-      showMessage(`O número ${numero} já foi escolhido. Escolha outro.`, "error");
+      showMessage(`A cota ${code} já foi escolhida. Escolha outra.`, "error");
       return;
     }
 
     if (selectedNumbers.has(numero)) selectedNumbers.delete(numero);
     else selectedNumbers.add(numero);
 
+    highlightedNumber = null;
     renderNumbers();
     updateSelectionSummary();
     hideMessage();
@@ -172,10 +299,10 @@
   function updateSelectionSummary() {
     const sorted = getSelectedNumbers();
     const total = sorted.length * getValuePerNumber();
-    const numbersText = sorted.length ? sorted.map((n) => String(n).padStart(2, "0")).join(", ") : "Nenhum";
+    const numbersText = sorted.length ? sorted.map(formatNumberCode).join(", ") : "Nenhuma";
     els.selectedNumbersText.textContent = numbersText;
     els.selectedTotalText.textContent = formatCurrency(total);
-    els.bottomSelectedText.textContent = sorted.length ? `${sorted.length} número(s) • ${formatCurrency(total)}` : "Nenhum";
+    els.bottomSelectedText.textContent = sorted.length ? `${sorted.length} cota(s) • ${formatCurrency(total)}` : "Nenhuma";
     els.bottomSummary.hidden = sorted.length === 0;
   }
 
@@ -187,12 +314,12 @@
     const whatsapp = els.whatsapp.value.trim();
     const observacao = els.observacao.value.trim();
 
-    if (!numeros.length) return showMessage("Escolha pelo menos um número livre.", "error");
+    if (!numeros.length) return showMessage("Escolha pelo menos uma cota livre.", "error");
     if (!nome || !whatsapp) return showMessage("Preencha nome completo e WhatsApp.", "error");
 
     try {
       setLoading(true);
-      showMessage("Conferindo se os números ainda estão livres...", "info");
+      showMessage("Conferindo se as cotas ainda estão livres...", "info");
       const response = await apiCall("reservar", {
         numeros,
         nome,
@@ -225,7 +352,7 @@
       console.error(error);
       const msg = error.message || "Não foi possível reservar. Tente novamente.";
       const match = msg.match(/número\s+(\d+)/i);
-      showMessage(match ? `O número ${match[1]} acabou de ser escolhido. Escolha outro.` : msg, "error");
+      showMessage(match ? `A cota ${formatNumberCode(Number(match[1]))} acabou de ser escolhida. Escolha outra.` : msg, "error");
       await safeReloadNumbers();
     } finally {
       setLoading(false);
@@ -237,7 +364,7 @@
     const pixPayload = buildPixPayload({ amount: total, txid: makeTxid(reservation.numeros) });
     const whatsMessage = buildWhatsAppProofMessage(reservation);
 
-    els.modalNumbers.textContent = reservation.numeros.map((n) => String(n).padStart(2, "0")).join(", ");
+    els.modalNumbers.textContent = reservation.numeros.map(formatNumberCode).join(", ");
     els.modalTotal.textContent = formatCurrency(total);
     els.modalPixKey.textContent = getPixKey();
     els.pixCopyPaste.value = pixPayload;
@@ -250,7 +377,7 @@
 
   async function sendProof() {
     if (!lastReservation || !lastReservation.numeros || !lastReservation.numeros.length) {
-      return showProofMessage("Faça a reserva primeiro para vincular o comprovante aos números.", "error");
+      return showProofMessage("Faça a reserva primeiro para vincular o comprovante às cotas.", "error");
     }
     if (!selectedProofFile) {
       return showProofMessage("Escolha uma foto, print ou PDF do comprovante.", "error");
@@ -272,7 +399,7 @@
       });
 
       const msg = response.status === "pago"
-        ? "Comprovante enviado e números marcados como pagos."
+        ? "Comprovante enviado e cotas marcadas como pagas."
         : "Comprovante enviado. Ele já apareceu no painel da responsável.";
       showProofMessage(msg, "success");
       await safeReloadNumbers();
@@ -399,9 +526,9 @@
   async function safeReloadNumbers() {
     try {
       const response = await apiCall("listar", {});
-      currentNumbers = normalizeNumbers(response.numeros || []);
-      selectedNumbers.clear();
+      normalizeNumbers(response.numeros || []);
       renderNumbers();
+      updatePanelMeta();
       updateSelectionSummary();
     } catch (error) {
       console.warn("Falha ao recarregar números", error);
@@ -430,27 +557,27 @@
 
   function shareRaffle() {
     const message = [
-      "💙 Rifa Solidária — Ajude Davi e Vitória",
+      "🏍️ Rifa Honda XRE 190 2018 — concorra por R$ 20,00!",
       "",
-      "Estamos realizando esta rifa para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora.",
+      "Escolha sua cota de 0000 a 9999 e concorra a uma Honda XRE 190 2018 seminova pela Loteria Federal (31/12).",
       "",
-      `🎟️ Valor: ${formatCurrency(getValuePerNumber())} por número`,
-      `🏆 Prêmio: ${CFG.PREMIO_RIFA || "A definir"}`,
-      `📅 Sorteio: ${CFG.DATA_SORTEIO || "A definir"}`,
+      `🎟️ Valor: ${formatCurrency(getValuePerNumber())} por cota`,
+      `🏆 Prêmio: ${CFG.PREMIO_RIFA || "Honda XRE 190 2018 (seminova)"}`,
+      `📅 Sorteio: ${CFG.DATA_SORTEIO || "31/12 (Loteria Federal)"}`,
       `🔑 Chave Pix: ${getPixKey()}`,
       "",
-      "Escolha seu número e participe. Toda ajuda faz a diferença! 🙏"
+      "Escolha seu número e participe. Quanto antes, melhor!"
     ].join("\n");
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener");
   }
 
   function buildWhatsAppProofMessage(reservation) {
     return [
-      "Olá! Fiz uma reserva na Rifa Solidária — Ajude Davi e Vitória.",
+      "Olá! Fiz uma reserva na Rifa Honda XRE 190 2018.",
       "",
       `Nome: ${reservation.nome}`,
       `WhatsApp: ${reservation.whatsapp}`,
-      `Números escolhidos: ${reservation.numeros.join(", ")}`,
+      `Cotas escolhidas: ${reservation.numeros.map(formatNumberCode).join(", ")}`,
       `Valor total: ${formatCurrency(reservation.total)}`,
       `Chave Pix: ${getPixKey()}`,
       "",
@@ -468,11 +595,7 @@
   }
 
   function getValuePerNumber() {
-    return Number(CFG.VALOR_NUMERO || 10);
-  }
-
-  function getTotalQuantity() {
-    return Number(CFG.QUANTIDADE_NUMEROS || 100);
+    return Number(CFG.VALOR_NUMERO || 20);
   }
 
   function getPixKey() {
@@ -510,56 +633,60 @@
   }
 
   function localDemoApi(action, data) {
-    const key = "rifa-solidaria-demo-numeros-v3";
+    const key = "rifa-xre190-demo-ocupados-v1";
     const now = new Date().toISOString();
-    const total = getTotalQuantity();
 
-    function getRows() {
-      const saved = localStorage.getItem(key);
-      if (saved) return JSON.parse(saved);
-      const rows = [];
-      for (let i = 1; i <= total; i += 1) {
-        rows.push({ numero: i, status: "livre", nome: "", whatsapp: "", valor: 0, data_reserva: "", data_pagamento: "", observacao: "", comprovante_url: "", data_comprovante: "" });
+    function getBusyMap() {
+      try {
+        const saved = localStorage.getItem(key);
+        return saved ? JSON.parse(saved) : {};
+      } catch (e) {
+        return {};
       }
-      localStorage.setItem(key, JSON.stringify(rows));
-      return rows;
     }
 
-    function saveRows(rows) {
-      localStorage.setItem(key, JSON.stringify(rows));
+    function saveBusyMap(mapObj) {
+      localStorage.setItem(key, JSON.stringify(mapObj));
     }
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        const rows = getRows();
-        if (action === "listar") return resolve({ ok: true, numeros: rows });
+        const busy = getBusyMap();
+        if (action === "listar") {
+          const rows = Object.values(busy);
+          return resolve({ ok: true, numeros: rows });
+        }
 
         if (action === "reservar") {
           const numeros = (data.numeros || []).map(Number);
           for (const numero of numeros) {
-            const row = rows.find((item) => Number(item.numero) === numero);
-            if (!row || row.status !== "livre") return reject(new Error(`O número ${numero} acabou de ser escolhido.`));
+            const existing = busy[numero];
+            if (existing && existing.status !== "livre") {
+              return reject(new Error(`O número ${numero} acabou de ser escolhido.`));
+            }
           }
           numeros.forEach((numero) => {
-            const row = rows.find((item) => Number(item.numero) === numero);
-            Object.assign(row, {
+            busy[numero] = {
+              numero,
               status: "reservado",
               nome: data.nome || "",
               whatsapp: data.whatsapp || "",
               valor: Number(data.valorPorNumero || getValuePerNumber()),
               data_reserva: now,
               data_pagamento: "",
-              observacao: data.observacao || ""
-            });
+              observacao: data.observacao || "",
+              comprovante_url: "",
+              data_comprovante: ""
+            };
           });
-          saveRows(rows);
+          saveBusyMap(busy);
           return resolve({ ok: true, numeros });
         }
 
         if (action === "enviarComprovante") {
           const numeros = (data.numeros || []).map(Number);
           numeros.forEach((numero) => {
-            const row = rows.find((item) => Number(item.numero) === numero);
+            const row = busy[numero];
             if (row && row.status !== "livre") {
               row.comprovante_url = "Comprovante salvo no modo teste local";
               row.data_comprovante = now;
@@ -569,12 +696,12 @@
               }
             }
           });
-          saveRows(rows);
+          saveBusyMap(busy);
           return resolve({ ok: true, status: data.autoConfirmar ? "pago" : "reservado" });
         }
 
         reject(new Error("Ação não disponível no modo teste local."));
-      }, 240);
+      }, 180);
     });
   }
 
@@ -584,9 +711,9 @@
 
   function buildPixPayload({ amount, txid }) {
     const key = getPixKey();
-    const name = sanitizePixText(CFG.PIX_RECEBEDOR || CFG.RESPONSAVEL_NOME || "RIFA SOLIDARIA", 25);
+    const name = sanitizePixText(CFG.PIX_RECEBEDOR || CFG.RESPONSAVEL_NOME || "ACAO ENTRE AMIGOS", 25);
     const city = sanitizePixText(CFG.PIX_CIDADE || "CARMO", 15);
-    const description = sanitizePixText("RIFA DAVI VITORIA", 72);
+    const description = sanitizePixText("RIFA XRE 190", 72);
     const tx = sanitizePixText(txid || "RIFA", 25).replace(/[^A-Z0-9]/g, "") || "RIFA";
 
     const merchantAccountInfo = tlv("26", tlv("00", "br.gov.bcb.pix") + tlv("01", key) + tlv("02", description));
@@ -641,6 +768,6 @@
   }
 
   function makeTxid(numbers) {
-    return `RIFA${(numbers || []).join("")}${Date.now().toString().slice(-5)}`.slice(0, 25);
+    return `RIFA${(numbers || []).map(formatNumberCode).join("")}${Date.now().toString().slice(-4)}`.slice(0, 25);
   }
 })();
