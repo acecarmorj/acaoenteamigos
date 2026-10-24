@@ -8,7 +8,7 @@ window.RIFA_CONFIG = {
   SUBTITULO: "Ação Entre Amigos",
 
   RESPONSAVEL_NOME: "Welington Santos",
-  WHATSAPP_RESPONSAVEL: "5522992848346",
+  WHATSAPP_RESPONSAVEL: "5522992839362",
 
   DATA_SORTEIO: "31/12 (Loteria Federal)",
   PREMIO_RIFA: "Honda XRE 190 2018 (seminova)",
