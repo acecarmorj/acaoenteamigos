@@ -913,3 +913,124 @@ body.public-body {
   outline-offset: 1px;
 }
 
+
+
+/* --- COTA BUTTON & PRIVACY / SELECTION ENHANCEMENT --- */
+.number-chip,
+.number-button {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 52px !important;
+  padding: 4px 2px !important;
+  border-radius: var(--radius-sm, 8px) !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  border: 1px solid var(--border-medium, #e5e7eb) !important;
+  background-color: #ffffff !important;
+  color: var(--text-main, #111827) !important;
+  cursor: pointer !important;
+  transition: all 0.12s ease !important;
+  user-select: none !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  font-variant-numeric: tabular-nums !important;
+  gap: 2px !important;
+  box-sizing: border-box !important;
+  text-decoration: none !important;
+}
+
+.number-chip:hover:not(:disabled),
+.number-button:hover:not(:disabled) {
+  background-color: var(--bg-muted, #f3f4f6) !important;
+  border-color: var(--text-main, #111827) !important;
+  transform: scale(1.04) !important;
+}
+
+.number-chip.selected,
+.number-button.selected,
+button.number-chip.selected,
+button.number-button.selected {
+  background-color: var(--red-primary, #dc2626) !important;
+  color: #ffffff !important;
+  border-color: var(--red-hover, #b91c1c) !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.45) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  z-index: 2 !important;
+}
+
+.cota-num {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
+}
+
+.cota-badge {
+  display: block;
+  max-width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 1.1;
+  padding: 1px 4px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.number-chip.selected .cota-badge,
+.number-button.selected .cota-badge {
+  background: rgba(255, 255, 255, 0.28);
+  color: #ffffff;
+}
+
+.number-chip.my-cota,
+.number-button.my-cota {
+  background-color: #ecfdf5 !important;
+  border-color: #16a34a !important;
+  color: #15803d !important;
+}
+
+.number-chip.my-cota .cota-badge,
+.number-button.my-cota .cota-badge {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.number-chip.reserved,
+.number-button.reserved {
+  background-color: var(--bg-muted, #f3f4f6) !important;
+  color: var(--text-light, #6b7280) !important;
+  border-color: var(--border-light, #e5e7eb) !important;
+  border-style: dashed !important;
+  cursor: not-allowed !important;
+  opacity: 0.85 !important;
+}
+
+.number-chip.reserved .cota-badge,
+.number-button.reserved .cota-badge {
+  font-size: 0.58rem;
+  color: var(--text-light, #6b7280);
+  background: transparent;
+  opacity: 0.85;
+}
+
+.number-chip.paid,
+.number-button.paid {
+  background-color: var(--black-solid, #111827) !important;
+  color: var(--text-white, #ffffff) !important;
+  border-color: var(--black-solid, #111827) !important;
+  cursor: not-allowed !important;
+  opacity: 0.95 !important;
+}
+
+.number-chip.paid .cota-badge,
+.number-button.paid .cota-badge {
+  font-size: 0.58rem;
+  color: #d1d5db;
+  background: transparent;
+  opacity: 0.85;
+}

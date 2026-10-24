@@ -9,6 +9,51 @@
   let lastReservation = null;
   let selectedProofFile = null;
 
+  const USER_RESERVATIONS_STORAGE_KEY = "minhas_cotas_usuario_v1";
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  function getMySavedReservations() {
+    try {
+      const raw = localStorage.getItem(USER_RESERVATIONS_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function saveMyReservation(numbers, name, whatsapp) {
+    try {
+      const current = getMySavedReservations();
+      const cleanName = (name || "").trim();
+      const cleanWa = (whatsapp || "").trim();
+      const now = new Date().toISOString();
+      (numbers || []).forEach((n) => {
+        const num = Number(n);
+        if (Number.isFinite(num)) {
+          current[num] = {
+            numero: num,
+            nome: cleanName,
+            whatsapp: cleanWa,
+            savedAt: now
+          };
+        }
+      });
+      localStorage.setItem(USER_RESERVATIONS_STORAGE_KEY, JSON.stringify(current));
+    } catch (err) {
+      console.warn("Falha ao salvar cotas locais:", err);
+    }
+  }
+
+
   const els = {
     valorNumeroHero: document.getElementById("valorNumeroHero"),
     pixHero: document.getElementById("pixHero"),
@@ -176,6 +221,14 @@
     els.shareBtn.addEventListener("click", shareRaffle);
     els.refreshBtn.addEventListener("click", loadNumbers);
     els.reserveForm.addEventListener("submit", handleReservation);
+    if (els.nome) {
+      els.nome.addEventListener("input", () => {
+        if (selectedNumbers.size > 0) {
+          renderNumbers();
+        }
+      });
+    }
+
     els.goToFormBtn.addEventListener("click", () => document.querySelector(".form-card").scrollIntoView({ behavior: "smooth", block: "start" }));
 
     if (els.prevPanelBtn) els.prevPanelBtn.addEventListener("click", () => setPanel(currentPanelIndex - 1));
@@ -257,21 +310,50 @@
     const last = Math.min(startBase + getTotalQuantity() - 1, first + panelSize - 1);
     const frag = document.createDocumentFragment();
 
+    const mySaved = getMySavedReservations();
+    const typedName = (els.nome ? els.nome.value : "").trim();
+
     for (let num = first; num <= last; num += 1) {
       const item = getNumberInfo(num);
       const code = formatNumberCode(num);
       const btn = document.createElement("button");
       btn.type = "button";
-      btn.className = "number-chip";
-      btn.textContent = code;
-      btn.setAttribute("aria-label", `Cota ${code}, ${item.status}`);
+      btn.className = "number-chip number-button";
+      btn.setAttribute("data-number", String(num));
 
-      const isBusy = item.status === "reservado" || item.status === "pago";
-      if (selectedNumbers.has(num)) btn.classList.add("selected");
-      if (item.status === "reservado") btn.classList.add("reserved");
-      if (item.status === "pago") btn.classList.add("paid");
-      if (item.comprovante_url && item.status !== "pago") btn.classList.add("proof-sent");
+      const isSelected = selectedNumbers.has(num);
+      const isReserved = item.status === "reservado";
+      const isPaid = item.status === "pago";
+      const isBusy = isReserved || isPaid;
+      const isMyCota = Boolean(mySaved[num] && isBusy);
+
+      if (isSelected) btn.classList.add("selected");
+      if (isReserved) btn.classList.add("reserved");
+      if (isPaid) btn.classList.add("paid");
+      if (isMyCota) btn.classList.add("my-cota");
+      if (item.comprovante_url && !isPaid) btn.classList.add("proof-sent");
       if (highlightedNumber === num) btn.classList.add("search-highlight");
+
+      // Visual display: Buyer name on user's own marked/reserved cotas, STRICT PRIVACY for others
+      if (isSelected) {
+        const displayName = typedName || "Sua Cota";
+        btn.innerHTML = `<span class="cota-num">${code}</span><span class="cota-badge" title="${escapeHtml(displayName)}">${escapeHtml(displayName)}</span>`;
+        btn.setAttribute("aria-label", `Cota ${code}, selecionada por você (${displayName})`);
+      } else if (isMyCota) {
+        const displayName = mySaved[num].nome || typedName || "Sua Cota";
+        const statusLabel = isPaid ? "Paga" : "Reservada";
+        btn.innerHTML = `<span class="cota-num">${code}</span><span class="cota-badge" title="${escapeHtml(displayName)} (${statusLabel})">${escapeHtml(displayName)}</span>`;
+        btn.setAttribute("aria-label", `Cota ${code}, sua cota (${displayName}, ${statusLabel})`);
+      } else if (isBusy) {
+        // OTHER BUYERS: STRICT PRIVACY - never render other buyers' names or phone numbers!
+        const statusLabel = isPaid ? "Paga" : "Reservada";
+        btn.innerHTML = `<span class="cota-num">${code}</span><span class="cota-badge">${statusLabel}</span>`;
+        btn.setAttribute("aria-label", `Cota ${code}, ${statusLabel}`);
+      } else {
+        btn.innerHTML = `<span class="cota-num">${code}</span>`;
+        btn.setAttribute("aria-label", `Cota ${code}, livre`);
+      }
+
       btn.disabled = isBusy;
       btn.addEventListener("click", () => toggleNumber(num));
       frag.appendChild(btn);
@@ -338,6 +420,7 @@
         criado_em: new Date().toISOString()
       };
       localStorage.setItem("rifa-last-reservation", JSON.stringify(lastReservation));
+      saveMyReservation(finalNumbers, nome, whatsapp);
 
       selectedProofFile = null;
       els.proofFile.value = "";
