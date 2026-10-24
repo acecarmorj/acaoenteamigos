@@ -53,7 +53,6 @@
     }
   }
 
-
   const els = {
     valorNumeroHero: document.getElementById("valorNumeroHero"),
     pixHero: document.getElementById("pixHero"),
@@ -214,6 +213,49 @@
     }
   }
 
+  function handleQuickPick(count) {
+    const startBase = getStartNumber();
+    const totalQty = getTotalQuantity();
+    const panelSize = getPanelSize();
+    const panelFirst = startBase + currentPanelIndex * panelSize;
+    const panelLast = Math.min(startBase + totalQty - 1, panelFirst + panelSize - 1);
+
+    const freeInPanel = [];
+    for (let n = panelFirst; n <= panelLast; n += 1) {
+      if (getNumberInfo(n).status === "livre" && !selectedNumbers.has(n)) {
+        freeInPanel.push(n);
+      }
+    }
+
+    let pool = freeInPanel;
+    if (pool.length < count) {
+      pool = [];
+      for (let n = startBase; n < startBase + totalQty; n += 1) {
+        if (getNumberInfo(n).status === "livre" && !selectedNumbers.has(n)) {
+          pool.push(n);
+        }
+      }
+    }
+
+    if (!pool.length) {
+      showMessage("Não há mais cotas livres disponíveis para adicionar.", "error");
+      return;
+    }
+
+    const picked = [];
+    for (let i = 0; i < count && pool.length > 0; i += 1) {
+      const idx = Math.floor(Math.random() * pool.length);
+      const chosen = pool.splice(idx, 1)[0];
+      selectedNumbers.add(chosen);
+      picked.push(chosen);
+    }
+
+    highlightedNumber = picked[picked.length - 1];
+    renderNumbers();
+    updateSelectionSummary();
+    showMessage(`+${picked.length} cota(s) da sorte adicionada(s): ${picked.map(formatNumberCode).join(", ")}`, "success");
+  }
+
   function bindEvents() {
     els.copyPixBtn.addEventListener("click", () => copyText(getPixKey(), "Chave Pix copiada."));
     els.copyPixAgainBtn.addEventListener("click", () => copyText(getPixKey(), "Chave Pix copiada."));
@@ -241,6 +283,20 @@
           event.preventDefault();
           handleSearchNumber();
         }
+      });
+    }
+
+    document.querySelectorAll("[data-quick-pick]").forEach((btn) => {
+      btn.addEventListener("click", () => handleQuickPick(Number(btn.getAttribute("data-quick-pick") || 1)));
+    });
+    const clearBtn = document.getElementById("clearSelectionBtn");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        selectedNumbers.clear();
+        highlightedNumber = null;
+        renderNumbers();
+        updateSelectionSummary();
+        showMessage("Seleção de cotas limpa.", "info");
       });
     }
 

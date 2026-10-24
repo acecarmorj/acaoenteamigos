@@ -7,7 +7,7 @@
   <meta name="description" content="Concorra a uma Honda XRE 190 2018 seminova pela Loteria Federal (31/12). Cotas de R$ 20,00 (0000 a 9999) com Pix rápido. Escolha seu número e garanta o seu." />
   <meta name="theme-color" content="#ffffff" />
   <link rel="preconnect" href="https://api.qrserver.com" />
-  <link rel="stylesheet" href="assets/style.css?v=clean5" />
+  <link rel="stylesheet" href="assets/style.css?v=clean8" />
 </head>
 <body class="public-body">
   <div class="mobile-app-shell">
@@ -116,6 +116,15 @@
           <div class="panel-search-row">
             <input type="text" id="searchNumberInput" class="search-number-input" inputmode="numeric" maxlength="4" placeholder="Buscar cota (ex.: 0777)" aria-label="Buscar número de 4 dígitos" />
             <button class="button button-blue search-number-btn" type="button" id="searchNumberBtn">Ir / Marcar</button>
+          </div>
+          <div class="quick-pick-bar" aria-label="Escolha rápida de cotas aleatórias">
+            <span class="quick-pick-label">Surpresinha:</span>
+            <div class="quick-pick-actions">
+              <button class="quick-pick-btn" type="button" data-quick-pick="1">+1 cota</button>
+              <button class="quick-pick-btn" type="button" data-quick-pick="5">+5 cotas</button>
+              <button class="quick-pick-btn" type="button" data-quick-pick="10">+10 cotas</button>
+              <button class="quick-pick-btn clear-btn" type="button" id="clearSelectionBtn">Limpar</button>
+            </div>
           </div>
           <div class="panel-meta-row" id="panelMetaText">Painel 01 de 100 • Números 0000 a 0099</div>
         </div>
@@ -259,6 +268,6 @@
     };
   </script>
   <script src="assets/config.js"></script>
-  <script src="assets/app.js"></script>
+  <script src="assets/app.js?v=clean8"></script>
 </body>
 </html>

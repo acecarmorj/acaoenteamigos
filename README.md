@@ -1,14 +1,30 @@
-# Ação Entre Amigos — Rifa Solidária Davi e Vitória (Edição Motocross)
+# Ação Entre Amigos (Rifa Solidária)
 
-Aplicação web pública, leve e responsiva para arrecadação solidária, hospedada via **GitHub Pages**.
+## 📌 O que é este projeto?
+Sistema de rifa beneficente online com escolha de números, controle de bilhetes pagos e confirmação via PIX.
 
-## Funcionalidades
-- Interface mobile-first moderna com tema escuro Motocross (WCAG AA/AAA).
-- Seleção interativa de números de 1 a 100 com grid tátil e acessível.
-- Geração instantânea de Pix Copia e Cola e QR Code.
-- Upload de comprovante de pagamento diretamente pelo navegador.
-- Compartilhamento rápido via WhatsApp com mensagem formatada.
-- Arquitetura segura: pacote público estático sem exposição de credenciais ou chaves administrativas.
+---
 
-## Hospedagem e Execução
-Hospedado no GitHub Pages a partir da branch principal.
+## 🌿 Ramo Git e Origem
+- Repositório `https://github.com/acecarmorj/acaoenteamigos.git`.
+
+---
+
+## 🚀 Como Rodar Localmente
+Servir localmente via servidor web:
+```bash
+python -m http.server 8080
+```
+
+---
+
+## ☁️ Dependências de Serviços Externos
+- Google Apps Script / Webhooks e PWA.
+
+---
+
+## 🔧 O que reconfigurar após Formatação da Máquina?
+1. Conferir endpoint no `apps-script/`.
+
+---
+*Documento gerado automaticamente para o inventário de reorganização e preparação de formatação do sistema.*
