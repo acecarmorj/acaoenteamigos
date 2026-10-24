@@ -90,6 +90,7 @@
     copyPixAgainBtn: document.getElementById("copyPixAgainBtn"),
     copyPixPayloadBtn: document.getElementById("copyPixPayloadBtn"),
     openWhatsAppBtn: document.getElementById("openWhatsAppBtn"),
+    btnDownloadReceipt: document.getElementById("btnDownloadReceipt"),
     proofFile: document.getElementById("proofFile"),
     proofFileName: document.getElementById("proofFileName"),
     sendProofBtn: document.getElementById("sendProofBtn"),
@@ -260,6 +261,11 @@
     els.copyPixBtn.addEventListener("click", () => copyText(getPixKey(), "Chave Pix copiada."));
     els.copyPixAgainBtn.addEventListener("click", () => copyText(getPixKey(), "Chave Pix copiada."));
     els.copyPixPayloadBtn.addEventListener("click", () => copyText(els.pixCopyPaste.value, "Pix copia e cola copiado."));
+    if (els.btnDownloadReceipt) {
+      els.btnDownloadReceipt.addEventListener("click", () => {
+        downloadReservationReceipt(lastReservation);
+      });
+    }
     els.shareBtn.addEventListener("click", shareRaffle);
     els.refreshBtn.addEventListener("click", loadNumbers);
     els.reserveForm.addEventListener("submit", handleReservation);
@@ -436,11 +442,12 @@
 
   function updateSelectionSummary() {
     const sorted = getSelectedNumbers();
-    const total = sorted.length * getValuePerNumber();
+    const pricing = getPromotionPricing(sorted.length);
+    const total = pricing.total;
     const numbersText = sorted.length ? sorted.map(formatNumberCode).join(", ") : "Nenhuma";
     els.selectedNumbersText.textContent = numbersText;
     els.selectedTotalText.textContent = formatCurrency(total);
-    els.bottomSelectedText.textContent = sorted.length ? `${sorted.length} cota(s) • ${formatCurrency(total)}` : "Nenhuma";
+    els.bottomSelectedText.textContent = sorted.length ? `${sorted.length} cota(s) • ${formatCurrency(total)}${pricing.discount ? ` • Economize ${formatCurrency(pricing.discount)}` : ""}` : "Nenhuma";
     els.bottomSummary.hidden = sorted.length === 0;
   }
 
@@ -451,6 +458,7 @@
     const nome = els.nome.value.trim();
     const whatsapp = els.whatsapp.value.trim();
     const observacao = els.observacao.value.trim();
+    const pricing = getPromotionPricing(numeros.length);
 
     if (!numeros.length) return showMessage("Escolha pelo menos uma cota livre.", "error");
     if (!nome || !whatsapp) return showMessage("Preencha nome completo e WhatsApp.", "error");
@@ -463,7 +471,10 @@
         nome,
         whatsapp,
         observacao,
-        valorPorNumero: getValuePerNumber()
+        valorPorNumero: getValuePerNumber(),
+        precoBase: pricing.base,
+        desconto: pricing.discount,
+        valorTotal: pricing.total
       });
 
       const finalNumbers = response.numeros || numeros;
@@ -471,7 +482,9 @@
         nome,
         whatsapp,
         numeros: finalNumbers.map(Number),
-        total: finalNumbers.length * getValuePerNumber(),
+        total: Number(response.valor_total ?? pricing.total),
+        precoBase: Number(response.valor_base ?? pricing.base),
+        desconto: Number(response.desconto ?? pricing.discount),
         observacao,
         criado_em: new Date().toISOString()
       };
@@ -628,6 +641,25 @@
 
   function getSelectedNumbers() {
     return Array.from(selectedNumbers).sort((a, b) => a - b);
+  }
+
+  function getPromotionPricing(quantity) {
+    const baseUnit = getValuePerNumber();
+    let remaining = Number(quantity) || 0;
+    let totalCents = 0;
+    const promotions = Array.isArray(CFG.PROMOCOES_COTAS) ? CFG.PROMOCOES_COTAS : [];
+    promotions.slice().sort((a, b) => Number(b.quantidade) - Number(a.quantidade)).forEach((promo) => {
+      const size = Number(promo.quantidade);
+      const valueCents = Math.round(Number(promo.valor) * 100);
+      if (!Number.isInteger(size) || size < 1 || valueCents < 0) return;
+      const groups = Math.floor(remaining / size);
+      totalCents += groups * valueCents;
+      remaining -= groups * size;
+    });
+    totalCents += remaining * Math.round(baseUnit * 100);
+    const base = quantity * baseUnit;
+    const total = totalCents / 100;
+    return { base, total, discount: Math.max(0, base - total) };
   }
 
   function setLoading(isLoading) {

@@ -20,6 +20,12 @@ window.RIFA_CONFIG = {
   PIX_CIDADE: "CARMO",
 
   VALOR_NUMERO: 20,
+  // Pacotes aplicados automaticamente pela quantidade total selecionada.
+  PROMOCOES_COTAS: [
+    { quantidade: 10, valor: 170 },
+    { quantidade: 6, valor: 100 },
+    { quantidade: 3, valor: 50 }
+  ],
   QUANTIDADE_NUMEROS: 10000,
   NUMERO_INICIAL: 0,
   TAMANHO_PAINEL: 100,
