@@ -1293,6 +1293,24 @@ textarea,
   display: none !important;
 }
 
+.promo-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  margin: 12px 0;
+  padding: 10px 12px;
+  border: 1px solid #fecaca;
+  border-left: 4px solid var(--red-primary, #dc2626);
+  border-radius: 10px;
+  background: #fff7ed;
+  color: #7f1d1d;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.promo-strip strong { color: #991b1b; }
+
 /* Keep five desktop columns inside the card instead of letting intrinsic
    ticket content force a sixth-width overflow. */
 .numbers-grid {

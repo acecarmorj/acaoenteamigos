@@ -555,9 +555,21 @@
   <!-- Barra de Ações Rápidas (Oculta ao Imprimir / Gerar PDF) -->
   <nav class="top-action-bar" aria-label="Ações do Cartaz">
     <a href="index.html" class="action-btn btn-buy">🛒 Escolher Minha Cota Agora</a>
+    <a href="canvas-instagram.html" class="action-btn btn-whatsapp" style="background:#0284c7;">🎨 Estúdio Canvas Pro (A4 / Vídeo / Combos)</a>
+    <button type="button" class="action-btn btn-print" id="downloadCanvasBtn">📥 Baixar Imagem PNG (Canvas 1080×1920 p/ Instagram)</button>
     <button type="button" class="action-btn btn-whatsapp" id="sharePosterBtn">📲 Compartilhar Cartaz no WhatsApp</button>
     <button type="button" class="action-btn btn-print" onclick="window.print()">🖨️ Imprimir Cartaz / Salvar PDF para Instagram</button>
   </nav>
+
+  <!-- Prévia e Geração em Canvas HTML5 de Alta Resolução (1080x1920) -->
+  <section style="width: 100%; max-width: 680px; background: rgba(15, 23, 42, 0.92); border: 2px solid var(--gold); border-radius: 20px; padding: 14px; margin-bottom: 20px; text-align: center; box-shadow: 0 12px 30px rgba(0,0,0,0.5);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+      <strong style="color: var(--gold-bright); font-size: 0.9rem;">🖼️ ARTE OFICIAL EM CANVAS HTML5 (1080×1920 HD — STORIES / REELS / STATUS)</strong>
+      <span id="canvasStatusBadge" style="font-size: 0.76rem; color: #6ee7b7; font-weight: 800;">✓ Canvas Renderizado</span>
+    </div>
+    <canvas id="rifaPosterCanvas" width="1080" height="1920" style="width: 100%; max-width: 360px; height: auto; border-radius: 14px; border: 2px solid var(--gold); box-shadow: 0 10px 25px rgba(0,0,0,0.65); display: block; margin: 0 auto;"></canvas>
+    <canvas id="posterCanvas" width="1080" height="1920" style="display:none;"></canvas>
+  </section>
 
   <!-- Cartaz / Bilhete Premiado Oficial -->
   <article class="poster-ticket">
@@ -687,22 +699,212 @@
   <script>
     (function () {
       var shareBtn = document.getElementById('sharePosterBtn');
-      if (!shareBtn) return;
-      shareBtn.addEventListener('click', function () {
-        var text = [
-          '🏍️ *MUDE DE VIDA EM 2027 COM UMA HONDA XRE 190 NA GARAGEM!*',
-          '',
-          '🔥 Por apenas *R$ 20,00* (o valor de 2 corridas!), você concorre a uma *Honda XRE 190 2018 seminova* pronta pra trabalhar ou passear!',
-          '🎯 Cotas de *0000 a 9999* | Sorteio *31/12 pela Loteria Federal* com *TRANSMISSÃO AO VIVO NO YOUTUBE!*',
-          '💳 Chave Pix: *22992836392* (Welington Santos)',
-          '📲 WhatsApp Oficial: *(22) 99283-9362*',
-          '',
-          '👉 *Escolha sua cota agora no link oficial:*',
-          'https://acecarmorj.github.io/acaoenteamigos/'
-        ].join('\n');
-        var url = 'https://wa.me/?text=' + encodeURIComponent(text);
-        window.open(url, '_blank', 'noopener');
-      });
+      if (shareBtn) {
+        shareBtn.addEventListener('click', function () {
+          var text = [
+            '🏍️ *MUDE DE VIDA EM 2027 COM UMA HONDA XRE 190 NA GARAGEM!*',
+            '',
+            '🔥 Por apenas *R$ 20,00* (o valor de 2 corridas!), você concorre a uma *Honda XRE 190 2018 seminova* pronta pra trabalhar ou passear!',
+            '🎯 Cotas de *0000 a 9999* | Sorteio *31/12 pela Loteria Federal* com *TRANSMISSÃO AO VIVO NO YOUTUBE!*',
+            '💳 Chave Pix: *22992836392* (Welington Santos)',
+            '📲 WhatsApp Oficial: *(22) 99283-9362*',
+            '',
+            '👉 *Escolha sua cota agora no link oficial:*',
+            'https://acecarmorj.github.io/acaoenteamigos/'
+          ].join('\n');
+          var url = 'https://wa.me/?text=' + encodeURIComponent(text);
+          window.open(url, '_blank', 'noopener');
+        });
+      }
+
+      // Gerador de Cartaz em HTML5 Canvas (1080x1920 Story / Feed / Status)
+      var canvasBtn = document.getElementById('downloadCanvasBtn');
+      var mainCanvas = document.getElementById('rifaPosterCanvas');
+      var backupCanvas = document.getElementById('posterCanvas');
+
+      function drawPosterOnCanvas(canvas, heroImg, qrImg) {
+        if (!canvas) return;
+        var ctx = canvas.getContext('2d');
+
+        // Fundo escuro premium com gradiente
+        var grad = ctx.createLinearGradient(0, 0, 0, 1920);
+        grad.addColorStop(0, '#131826');
+        grad.addColorStop(0.5, '#090d16');
+        grad.addColorStop(1, '#1a0b10');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 1080, 1920);
+
+        // Moldura Dourada de Bilhete Premiado
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 8;
+        ctx.strokeRect(30, 30, 1020, 1860);
+
+        // Faixa Vermelha Superior
+        ctx.fillStyle = '#dc2626';
+        ctx.fillRect(34, 34, 1012, 110);
+        ctx.fillStyle = '#fde047';
+        ctx.font = '900 32px Inter, Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('🎟️ BILHETE PREMIADO OFICIAL • SÉRIE 0000–9999', 540, 100);
+
+        // Chamada Mototaxistas
+        ctx.fillStyle = '#6ee7b7';
+        ctx.font = '800 30px Inter, Arial, sans-serif';
+        ctx.fillText('🏍️ ALÔ MOTOTAXISTAS E TRABALHADORES DO NORDESTE, RJ E MG!', 540, 195);
+
+        // Headline Principal
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '900 54px Inter, Arial, sans-serif';
+        ctx.fillText('MUDE DE VIDA EM 2027 COM UMA', 540, 270);
+        ctx.fillStyle = '#fde047';
+        ctx.font = '900 62px Inter, Arial, sans-serif';
+        ctx.fillText('HONDA XRE 190 NA GARAGEM!', 540, 345);
+
+        // Subheadline R$ 20
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = '700 31px Inter, Arial, sans-serif';
+        ctx.fillText('Por apenas R$ 20,00 (o valor de 2 corridas!), você concorre', 540, 410);
+        ctx.fillText('a uma XRE 190 pronta pra trabalhar ou passear!', 540, 452);
+
+        if (heroImg) {
+          ctx.save();
+          ctx.strokeStyle = '#fbbf24';
+          ctx.lineWidth = 6;
+          ctx.strokeRect(70, 490, 940, 520);
+          ctx.drawImage(heroImg, 70, 490, 940, 520);
+          ctx.restore();
+        }
+
+        // Selo de Preço R$ 20,00
+        ctx.fillStyle = '#fde047';
+        ctx.fillRect(730, 515, 255, 130);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(730, 515, 255, 130);
+        ctx.fillStyle = '#7f1d1d';
+        ctx.font = '900 24px Inter, Arial, sans-serif';
+        ctx.fillText('APENAS', 857, 552);
+        ctx.font = '900 54px Inter, Arial, sans-serif';
+        ctx.fillText('R$ 20,00', 857, 610);
+
+        // Mini-Cartela no Canvas
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(70, 1045, 940, 230);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(70, 1045, 940, 230);
+        ctx.fillStyle = '#fde047';
+        ctx.font = '900 30px Inter, Arial, sans-serif';
+        ctx.fillText('🎯 ESCOLHA SEUS 4 DÍGITOS DA SORTE (0000 A 9999)', 540, 1095);
+
+        var sampleNums = ['0007', '0190', '0777', '2018', '2027', '7777', '9999'];
+        sampleNums.forEach(function (num, idx) {
+          var bx = 95 + idx * 128;
+          var by = 1125;
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(bx, by, 112, 115);
+          ctx.strokeStyle = '#fbbf24';
+          ctx.strokeRect(bx, by, 112, 115);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '900 32px Courier New, monospace';
+          ctx.fillText(num, bx + 56, by + 62);
+          ctx.fillStyle = '#6ee7b7';
+          ctx.font = '800 20px Inter, Arial, sans-serif';
+          ctx.fillText('LIVRE', bx + 56, by + 95);
+        });
+
+        // Bloco QR Code e Informações Oficiais
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(70, 1310, 360, 420);
+        if (qrImg) {
+          ctx.drawImage(qrImg, 100, 1330, 300, 300);
+        }
+        ctx.fillStyle = '#991b1b';
+        ctx.font = '900 22px Inter, Arial, sans-serif';
+        ctx.fillText('APONTE A CÂMERA DO CELULAR', 250, 1665);
+        ctx.fillText('E ESCOLHA SUA COTA NA HORA!', 250, 1695);
+
+        // Textos laterais do QR Code
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#fde047';
+        ctx.font = '900 34px Inter, Arial, sans-serif';
+        ctx.fillText('💰 VALOR: R$ 20,00 A COTA', 460, 1365);
+
+        ctx.fillStyle = '#ef4444';
+        ctx.font = '900 28px Inter, Arial, sans-serif';
+        ctx.fillText('🔴 SORTEIO 31/12 (LOTERIA FEDERAL)', 460, 1435);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '800 26px Inter, Arial, sans-serif';
+        ctx.fillText('TRANSMISSÃO AO VIVO NO YOUTUBE!', 460, 1475);
+
+        ctx.fillStyle = '#fde047';
+        ctx.font = '900 32px Inter, Arial, sans-serif';
+        ctx.fillText('💳 PIX: 22992836392', 460, 1550);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '700 24px Inter, Arial, sans-serif';
+        ctx.fillText('Welington Santos (Carmo/RJ)', 460, 1588);
+
+        ctx.fillStyle = '#6ee7b7';
+        ctx.font = '900 32px Inter, Arial, sans-serif';
+        ctx.fillText('📲 WHATSAPP: (22) 99283-9362', 460, 1665);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '700 23px Inter, Arial, sans-serif';
+        ctx.fillText('acecarmorj.github.io/acaoenteamigos', 460, 1710);
+
+        // Rodapé
+        ctx.textAlign = 'center';
+        ctx.fillStyle = '#fde047';
+        ctx.font = '800 26px Inter, Arial, sans-serif';
+        ctx.fillText('👉 GARANTA SUA COTA AGORA: acecarmorj.github.io/acaoenteamigos', 540, 1815);
+      }
+
+      function renderAllCanvases(callback) {
+        var hero = new Image();
+        hero.crossOrigin = 'anonymous';
+        var qr = new Image();
+        qr.crossOrigin = 'anonymous';
+        var loaded = 0;
+        function checkDone() {
+          loaded++;
+          if (loaded === 2) {
+            var hImg = hero.complete && hero.naturalWidth ? hero : null;
+            var qImg = qr.complete && qr.naturalWidth ? qr : null;
+            drawPosterOnCanvas(mainCanvas, hImg, qImg);
+            drawPosterOnCanvas(backupCanvas, hImg, qImg);
+            if (callback) callback(mainCanvas || backupCanvas);
+          }
+        }
+        hero.onload = checkDone;
+        hero.onerror = checkDone;
+        qr.onload = checkDone;
+        qr.onerror = checkDone;
+        hero.src = 'assets/xre190-hero.jpg';
+        qr.src = 'https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=https%3A%2F%2Facecarmorj.github.io%2Facaoenteamigos%2F';
+      }
+
+      // Renderiza imediatamente ao abrir a página
+      renderAllCanvases();
+
+      if (canvasBtn) {
+        canvasBtn.addEventListener('click', function () {
+          var origText = canvasBtn.textContent;
+          canvasBtn.textContent = '⏳ Gerando Arte PNG em Canvas...';
+          renderAllCanvases(function (targetCanvas) {
+            try {
+              var dataUrl = targetCanvas.toDataURL('image/png');
+              var a = document.createElement('a');
+              a.href = dataUrl;
+              a.download = 'cartaz-rifa-honda-xre190.png';
+              document.body.appendChild(a);
+              a.click();
+              document.body.removeChild(a);
+            } catch (err) {
+              window.print();
+            }
+            canvasBtn.textContent = origText;
+          });
+        });
+      }
     })();
   </script>
 </body>

@@ -342,12 +342,14 @@ function reservarNumeros_(payload) {
     const nome = String(payload.nome || '').trim();
     const whatsapp = String(payload.whatsapp || '').trim();
     const observacao = String(payload.observacao || '').trim();
-    const valorPorNumero = Number(payload.valorPorNumero || VALOR_POR_NUMERO);
+    const preco = calcularPrecoPromocional_(numeros.length);
+    validarTotalInformado_(payload.valorTotal, preco.total);
+    const valoresPorNumero = distribuirTotalPorCotas_(preco.total, numeros.length);
 
     if (!nome) throw new Error('Nome obrigatório.');
     if (!whatsapp) throw new Error('WhatsApp obrigatório.');
 
-    numeros.forEach(function (numero) {
+    numeros.forEach(function (numero, index) {
       const item = byNumber[numero];
       if (item && item.data.status !== 'livre') {
         throw new Error('A cota ' + formatCode_(numero) + ' acabou de ser reservada por outra pessoa.');
@@ -357,14 +359,14 @@ function reservarNumeros_(payload) {
     const now = new Date();
     const rowsToAppend = [];
 
-    numeros.forEach(function (numero) {
+    numeros.forEach(function (numero, index) {
       const item = byNumber[numero];
       const newRow = [
         numero,
         'reservado',
         nome,
         whatsapp,
-        valorPorNumero,
+        valoresPorNumero[index],
         now,
         '',
         observacao,
@@ -384,10 +386,55 @@ function reservarNumeros_(payload) {
       sheet.getRange(sheet.getLastRow() + 1, 1, rowsToAppend.length, COLS.length).setValues(rowsToAppend);
     }
 
-    return { ok: true, numeros: numeros, message: 'Reserva realizada com sucesso!' };
+    return {
+      ok: true,
+      numeros: numeros,
+      valor_base: preco.base,
+      desconto: preco.desconto,
+      valor_total: preco.total,
+      message: 'Reserva realizada com sucesso!'
+    };
   } finally {
     lock.releaseLock();
   }
+}
+
+/** Regras canônicas de pacotes: 10 por 180, 6 por 100, 3 por 50; sobra vale R$20. */
+function calcularPrecoPromocional_(quantidade) {
+  const qtd = Number(quantidade);
+  if (!Number.isInteger(qtd) || qtd < 1) throw new Error('Quantidade de cotas inválida.');
+
+  let restante = qtd;
+  let totalCentavos = 0;
+  [[10, 18000], [6, 10000], [3, 5000]].forEach(function (pacote) {
+    const grupos = Math.floor(restante / pacote[0]);
+    totalCentavos += grupos * pacote[1];
+    restante -= grupos * pacote[0];
+  });
+  totalCentavos += restante * VALOR_POR_NUMERO * 100;
+
+  const base = qtd * VALOR_POR_NUMERO;
+  const total = totalCentavos / 100;
+  return { base: base, desconto: base - total, total: total };
+}
+
+function validarTotalInformado_(informado, esperado) {
+  if (informado === undefined || informado === null || informado === '') return;
+  const valor = Number(informado);
+  if (!Number.isFinite(valor) || Math.round(valor * 100) !== Math.round(esperado * 100)) {
+    throw new Error('O valor da reserva não corresponde às promoções vigentes. Atualize a seleção e tente novamente.');
+  }
+}
+
+function distribuirTotalPorCotas_(total, quantidade) {
+  const totalCentavos = Math.round(total * 100);
+  const baseCentavos = Math.floor(totalCentavos / quantidade);
+  const extras = totalCentavos % quantidade;
+  const valores = [];
+  for (let index = 0; index < quantidade; index += 1) {
+    valores.push((baseCentavos + (index < extras ? 1 : 0)) / 100);
+  }
+  return valores;
 }
 
 /**
