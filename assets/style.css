@@ -53,6 +53,14 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+  overflow-x: hidden;
+  width: 100%;
+}
+
 body.public-body {
   margin: 0;
   padding: 0;
@@ -62,11 +70,17 @@ body.public-body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  touch-action: manipulation;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* SHELL MOBILE */
+/* SHELL MOBILE ANTI-PINÇA & VIEWPORT CONTAINMENT */
 .mobile-app-shell {
   max-width: 480px;
+  width: 100%;
   margin: 0 auto;
   min-height: 100vh;
   background-color: var(--bg-shell);
@@ -75,6 +89,8 @@ body.public-body {
   box-shadow: var(--shadow-card);
   position: relative;
   padding-bottom: 90px; /* espaço para o floating bottom bar */
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 /* HEADER / HERO */
@@ -513,7 +529,8 @@ body.public-body {
   padding: 12px 14px;
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
-  font-size: 0.95rem;
+  font-size: 16px !important; /* Previne auto-zoom no iOS Safari */
+  touch-action: manipulation;
   background-color: #ffffff;
   color: var(--text-main);
   font-family: inherit;
@@ -856,8 +873,9 @@ body.public-body {
   border: 1px solid var(--border-medium);
   background-color: #ffffff;
   color: var(--text-main);
-  font-size: 0.88rem;
+  font-size: 16px !important; /* Previne auto-zoom no iOS Safari */
   font-weight: 700;
+  touch-action: manipulation;
 }
 
 .panel-select:focus,
@@ -882,8 +900,9 @@ body.public-body {
   border: 1px solid var(--border-medium);
   background-color: #ffffff;
   color: var(--text-main);
-  font-size: 0.92rem;
+  font-size: 16px !important; /* Previne auto-zoom no iOS Safari */
   font-weight: 600;
+  touch-action: manipulation;
   letter-spacing: 0.04em;
 }
 
@@ -1031,8 +1050,12 @@ body.public-body {
   flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
-  min-height: 52px !important;
-  padding: 4px 2px !important;
+  min-height: 48px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
+  padding: 4px 1px !important;
   border-radius: var(--radius-sm, 8px) !important;
   font-size: 0.95rem !important;
   font-weight: 700 !important;
@@ -1077,17 +1100,30 @@ button.number-button.selected {
 
 .cota-badge {
   display: block;
-  max-width: 90%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0 !important;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.62rem;
+  font-size: 0.58rem;
   font-weight: 700;
   line-height: 1.1;
-  padding: 1px 4px;
+  padding: 1px 2px;
   border-radius: 4px;
   text-transform: uppercase;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.1px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.cota-num {
+  display: block;
+  min-width: 0 !important;
+  max-width: 100%;
+  overflow: hidden;
+  line-height: 1.1;
+  text-align: center;
 }
 
 .number-chip.selected .cota-badge,
@@ -1142,4 +1178,296 @@ button.number-button.selected {
   color: #d1d5db;
   background: transparent;
   opacity: 0.85;
+}
+
+
+/* ========================================================
+   MOBILE SAFETY — remove overflow e autozoom sem bloquear zoom acessivel
+   ======================================================== */
+html,
+body.public-body {
+  max-width: 100%;
+  overflow-x: clip;
+  -webkit-text-size-adjust: 100%;
+}
+
+.mobile-app-shell {
+  max-width: min(480px, 100%);
+  padding-bottom: calc(90px + env(safe-area-inset-bottom));
+}
+
+.hero-topline,
+.legend-mobile {
+  flex-wrap: wrap;
+}
+
+.hero-topline > *,
+.card-title-row > *,
+.title-left,
+.hero-stats > div,
+.mini-info-grid > div,
+.payment-summary > div,
+.numbers-grid > * {
+  min-width: 0;
+}
+
+.hero-stats strong,
+.mini-info-grid strong,
+.payment-summary strong,
+.pix-box strong,
+.panel-meta-row,
+#selectedNumbersText,
+#bottomSelectedText {
+  overflow-wrap: anywhere;
+}
+
+input,
+select,
+textarea,
+.panel-select,
+.search-number-input,
+.mobile-form input,
+.mobile-form textarea,
+.copy-paste-label textarea {
+  font-size: 16px !important;
+}
+
+button,
+.button,
+a.button,
+input,
+select,
+textarea,
+.number-button,
+.number-chip,
+.quick-pick-btn,
+.panel-step-btn {
+  touch-action: manipulation;
+}
+
+.modal-close {
+  width: 44px;
+  height: 44px;
+}
+
+.steps-card h3 {
+  text-wrap: balance;
+}
+
+.steps-card > div > div,
+.card-title-row.title-with-action {
+  min-width: 0;
+}
+
+.card-title-row.title-with-action {
+  flex-wrap: wrap;
+}
+
+.title-left {
+  flex: 1 1 240px;
+}
+
+#refreshBtn {
+  min-height: 44px;
+  margin-left: auto;
+}
+
+.quick-pick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+}
+
+.quick-pick-btn {
+  min-height: 44px;
+  white-space: normal;
+  line-height: 1.25;
+}
+
+.bottom-summary {
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+}
+
+/* `hidden` must win over the component display:flex rule. */
+.bottom-summary[hidden] {
+  display: none !important;
+}
+
+/* Keep five desktop columns inside the card instead of letting intrinsic
+   ticket content force a sixth-width overflow. */
+.numbers-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.number-chip,
+.number-button {
+  min-width: 0 !important;
+  aspect-ratio: auto !important;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .button-main:hover,
+  .button-whatsapp:hover,
+  .number-button:hover:not(:disabled),
+  .number-chip:hover:not(:disabled),
+  .number-chip.selected,
+  .number-button.selected,
+  button.number-chip.selected,
+  button.number-button.selected {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-card {
+    padding: 20px 16px 18px;
+  }
+
+  .soft-card {
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .hero-stats > div:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .numbers-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .number-chip,
+  .number-button {
+    min-width: 0 !important;
+  }
+
+  .panel-nav-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .panel-select {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  #prevPanelBtn {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  #nextPanelBtn {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .panel-step-btn,
+  .search-number-btn {
+    min-height: 44px;
+  }
+
+  .quick-pick-bar {
+    align-items: stretch;
+  }
+
+  .quick-pick-label {
+    width: 100%;
+  }
+
+  .payment-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-card {
+    padding: 20px 16px;
+  }
+}
+
+@media (max-width: 340px) {
+  .hero-card {
+    padding-inline: 14px;
+  }
+
+  .soft-card {
+    margin: 10px;
+    padding: 14px;
+  }
+
+  .panel-search-row,
+  .modal-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-actions-grid .button-whatsapp {
+    grid-column: auto;
+  }
+
+  .total-card,
+  .bottom-summary {
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ========================================================
+   CONTAINMENT INFALÍVEL DA GRID DE NÚMEROS (ALMIR #622)
+   Garante que as 5 colunas NUNCA transbordem da borda do cartão.
+   ======================================================== */
+.numbers-card {
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.numbers-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+  gap: 5px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.numbers-grid > * {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 420px) {
+  .soft-card {
+    margin: 10px 8px !important;
+    padding: 12px 10px !important;
+  }
+  .numbers-grid {
+    gap: 4px !important;
+  }
+  .number-chip,
+  .number-button {
+    min-height: 44px !important;
+    font-size: 0.82rem !important;
+    padding: 2px 1px !important;
+  }
+  .cota-badge {
+    font-size: 0.50rem !important;
+    padding: 0 1px !important;
+  }
 }

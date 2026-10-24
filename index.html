@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="HandheldFriendly" content="true" />
+  <meta name="MobileOptimized" content="width" />
   <title>Rifa Honda XRE 190 2018 | Ação Entre Amigos</title>
   <meta name="description" content="Concorra a uma Honda XRE 190 2018 seminova pela Loteria Federal (31/12). Cotas de R$ 20,00 (0000 a 9999) com Pix rápido. Escolha seu número e garanta o seu." />
   <meta name="theme-color" content="#ffffff" />
   <link rel="preconnect" href="https://api.qrserver.com" />
-  <link rel="stylesheet" href="assets/style.css?v=clean8" />
+  <link rel="stylesheet" href="assets/style.css?v=mobile10" />
 </head>
 <body class="public-body">
   <div class="mobile-app-shell">
@@ -45,6 +50,27 @@
 
     <main>
       <!-- Anúncio Oficial: Sorteio Ao Vivo no YouTube (Almir #389) -->
+      <!-- Passo a passo fácil para pessoas simples (Almir #601) -->
+      <section class="soft-card steps-card" style="background: #ffffff; border: 2px solid #fecaca; border-radius: 16px; padding: 14px 16px; margin-bottom: 16px; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.06);">
+        <h3 style="margin: 0 0 10px; font-size: 0.95rem; font-weight: 800; color: #991b1b; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px;">
+          <span>⚡</span> Como Participar (Super Fácil):
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 10px; background: #fef2f2; padding: 8px 12px; border-radius: 10px; border-left: 3px solid #dc2626;">
+            <span style="background: #dc2626; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; flex-shrink: 0;">1</span>
+            <span style="font-size: 0.86rem; font-weight: 700; color: #1e293b;">Escolha suas cotas da sorte (R$ 20 cada)</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; background: #fef2f2; padding: 8px 12px; border-radius: 10px; border-left: 3px solid #dc2626;">
+            <span style="background: #dc2626; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; flex-shrink: 0;">2</span>
+            <span style="font-size: 0.86rem; font-weight: 700; color: #1e293b;">Faça o Pix rápido pelo QR Code ou Chave</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; background: #fef2f2; padding: 8px 12px; border-radius: 10px; border-left: 3px solid #dc2626;">
+            <span style="background: #dc2626; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.75rem; flex-shrink: 0;">3</span>
+            <span style="font-size: 0.86rem; font-weight: 700; color: #1e293b;">Envie o comprovante no WhatsApp e concorra!</span>
+          </div>
+        </div>
+      </section>
+
       <section class="soft-card live-announcement-card" style="border-left: 4px solid #dc2626; background: #fff5f5; margin-bottom: 16px;">
         <div class="card-title-row" style="margin-bottom: 8px;">
           <div class="icon-bubble" style="background: #dc2626; color: #ffffff; border: none;">🔴</div>
@@ -121,9 +147,9 @@
           <div class="quick-pick-bar" aria-label="Escolha rápida de cotas aleatórias">
             <span class="quick-pick-label">Surpresinha:</span>
             <div class="quick-pick-actions">
-              <button class="quick-pick-btn" type="button" data-quick-pick="1">+1 cota</button>
-              <button class="quick-pick-btn" type="button" data-quick-pick="5">+5 cotas</button>
-              <button class="quick-pick-btn" type="button" data-quick-pick="10">+10 cotas</button>
+              <button class="quick-pick-btn" type="button" data-quick-pick="1">🎲 +1 cota</button>
+              <button class="quick-pick-btn" type="button" data-quick-pick="5" style="background: #fef2f2; border-color: #fca5a5; color: #dc2626; font-weight: 800;">🔥 +5 cotas (Mais Popular)</button>
+              <button class="quick-pick-btn" type="button" data-quick-pick="10">🚀 +10 cotas</button>
               <button class="quick-pick-btn clear-btn" type="button" id="clearSelectionBtn">Limpar</button>
             </div>
           </div>
@@ -165,16 +191,18 @@
           <label>
             Nome completo
             <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required />
+            <small style="display:block; color: #64748b; font-size: 0.78rem; font-weight: 500; margin-top: 4px;">Nome oficial do bilhete para apuração da Loteria Federal</small>
           </label>
           <label>
             WhatsApp (com DDD)
             <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ex.: 22 99999-9999" required />
+            <small style="display:block; color: #64748b; font-size: 0.78rem; font-weight: 500; margin-top: 4px;">Para avisarmos você e enviarmos a confirmação</small>
           </label>
           <label>
             Observação opcional
-            <textarea id="observacao" name="observacao" rows="3" placeholder="Observação opcional"></textarea>
+            <textarea id="observacao" name="observacao" rows="2" placeholder="Algum recado ou número preferido (opcional)"></textarea>
           </label>
-          <button class="button button-main button-full" type="submit" id="reserveBtn">Reservar minhas cotas</button>
+          <button class="button button-main button-full" type="submit" id="reserveBtn" style="font-size: 1.05rem; padding: 14px 20px;">🔒 Confirmar e Gerar Meu Pix (R$ 20)</button>
         </form>
       </section>
     </main>
@@ -269,6 +297,6 @@
     };
   </script>
   <script src="assets/config.js"></script>
-  <script src="assets/app.js?v=clean8"></script>
+  <script src="assets/app.js?v=clean9_mobile"></script>
 </body>
 </html>
