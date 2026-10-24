@@ -3,42 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Rifa Solidária — Ajude Davi e Vitória</title>
-  <meta name="description" content="Rifa Solidária para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora." />
-  <meta name="theme-color" content="#dff0ff" />
+  <title>Rifa Solidária Davi e Vitória — Edição Motocross | Ação Entre Amigos</title>
+  <meta name="description" content="Ação Entre Amigos — Edição Motocross. Rifa solidária para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora para o tratamento de Davi e Vitória." />
+  <meta name="theme-color" content="#121214" />
   <link rel="preconnect" href="https://api.qrserver.com" />
-  <link rel="stylesheet" href="./assets/style.css?v=20260708-share-link-2" />
+  <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body class="public-body">
   <div class="mobile-app-shell">
     <header class="hero-card">
-      <div class="soft-leaf soft-leaf-a"></div>
-      <div class="soft-leaf soft-leaf-b"></div>
-
       <div class="hero-topline">
-        <span class="mini-pill">💙 Rifa Solidária</span>
-        <span class="mini-pill mini-pill-light">100 números</span>
+        <span class="mini-pill">🏁 EDIÇÃO MOTOCROSS</span>
+        <span class="mini-pill mini-pill-light">🏍️ 100 COTAS</span>
       </div>
 
       <div class="hero-content">
         <div>
           <h1>Ajude Davi e Vitória</h1>
-          <p>Uma corrente de amor para ajudar a mamãe Juliana no transporte até o hospital em Juiz de Fora.</p>
+          <p>
+            Acelere nessa corrente solidária de alta rotação! Ajude a mamãe Juliana no transporte até o hospital em Juiz de Fora.
+          </p>
         </div>
-        <img src="./assets/ilustracao-davi-vitoria.png" alt="Ilustração delicada de duas crianças" class="hero-illustration" />
+        <img src="assets/motocross-hero.png" alt="Ação Entre Amigos Motocross Davi e Vitória" class="hero-illustration" />
       </div>
 
       <div class="hero-stats">
         <div>
-          <span>Valor</span>
+          <span>Valor da Cota</span>
           <strong id="valorNumeroHero">R$ 10,00</strong>
         </div>
         <div>
-          <span>Pix</span>
-          <strong id="pixHero">229922848326</strong>
+          <span>Chave Pix</span>
+          <strong id="pixHero">22992848346</strong>
         </div>
         <div>
-          <span>Sorteio</span>
+          <span>Data do Sorteio</span>
           <strong id="dataSorteioHero">A definir</strong>
         </div>
       </div>
@@ -47,15 +46,19 @@
     <main>
       <section class="soft-card cause-card">
         <div class="card-title-row">
-          <div class="icon-bubble">🤍</div>
+          <div class="icon-bubble">🏍️</div>
           <div>
-            <h2>Sobre a rifa</h2>
-            <p>Uma ajuda simples que faz diferença.</p>
+            <h2>Sobre a Ação Entre Amigos</h2>
+            <p>Juntos somos mais fortes na pista e na vida.</p>
           </div>
         </div>
 
-        <p class="main-text">Estamos realizando uma Rifa Solidária para ajudar com os custos de transporte da mamãe Juliana, que precisa fazer o trajeto de ida e volta ao hospital, em Juiz de Fora, onde Davi e Vitória estão internados.</p>
-        <p class="support-text">Toda ajuda faz a diferença neste momento tão delicado. Sua colaboração contribuirá para que Juliana possa estar ao lado dos seus filhos durante o tratamento.</p>
+        <p class="main-text">
+          Estamos realizando esta <strong>Rifa Solidária — Edição Motocross</strong> para ajudar com os custos de transporte e apoio à mamãe Juliana, que precisa fazer o trajeto de ida e volta ao hospital, em Juiz de Fora, onde Davi e Vitória estão em tratamento intensivo.
+        </p>
+        <p class="support-text">
+          Toda cota adquirida e cada compartilhamento fazem a diferença neste momento tão decisivo. Sua colaboração garante que a Juliana esteja ao lado dos seus filhos em cada etapa da recuperação.
+        </p>
 
         <div class="mini-info-grid">
           <div><span>Prêmio</span><strong id="premioInfo">A definir</strong></div>
@@ -64,22 +67,22 @@
 
         <div class="pix-box">
           <div>
-            <span>Chave Pix</span>
-            <strong id="pixKeyText">229922848326</strong>
+            <span>Chave Pix Oficial</span>
+            <strong id="pixKeyText">22992848346</strong>
           </div>
           <button class="button button-blue" type="button" id="copyPixBtn">Copiar Pix</button>
         </div>
 
-        <button class="button button-whatsapp button-full" type="button" id="shareBtn">Compartilhar esta rifa no WhatsApp</button>
+        <button class="button button-whatsapp button-full" type="button" id="shareBtn" style="margin-top: 12px;">Compartilhar Rifa no WhatsApp</button>
       </section>
 
       <section class="soft-card numbers-card">
         <div class="card-title-row title-with-action">
           <div class="title-left">
-            <div class="icon-bubble">🔢</div>
+            <div class="icon-bubble">🏁</div>
             <div>
-              <h2>Escolha seus números</h2>
-              <p>Toque nos números livres. Pode escolher mais de um.</p>
+              <h2>Escolha suas cotas</h2>
+              <p>Toque nas cotas livres para selecionar. Pode marcar quantas quiser.</p>
             </div>
           </div>
           <button class="small-button" type="button" id="refreshBtn">Atualizar</button>
@@ -87,9 +90,9 @@
 
         <div class="legend-mobile">
           <span><i class="status-dot free"></i>Livre</span>
-          <span><i class="status-dot selected"></i>Seu</span>
-          <span><i class="status-dot reserved"></i>Reservado</span>
-          <span><i class="status-dot paid"></i>Pago</span>
+          <span><i class="status-dot selected"></i>Selecionada</span>
+          <span><i class="status-dot reserved"></i>Reservada</span>
+          <span><i class="status-dot paid"></i>Paga</span>
         </div>
 
         <div id="statusMessage" class="message-box" hidden></div>
@@ -97,11 +100,11 @@
 
         <div class="total-card">
           <div>
-            <span>Selecionados</span>
-            <strong id="selectedNumbersText">Nenhum</strong>
+            <span>Cotas Selecionadas</span>
+            <strong id="selectedNumbersText">Nenhuma</strong>
           </div>
           <div>
-            <span>Total</span>
+            <span>Total a Pagar</span>
             <strong id="selectedTotalText">R$ 0,00</strong>
           </div>
         </div>
@@ -109,42 +112,43 @@
 
       <section class="soft-card form-card">
         <div class="card-title-row">
-          <div class="icon-bubble">📝</div>
+          <div class="icon-bubble">⚡</div>
           <div>
-            <h2>Reservar e pagar</h2>
-            <p>Depois de reservar, o app mostra QR Code, Pix copia e cola e envio do comprovante.</p>
+            <h2>Confirmar e pagar</h2>
+            <p>Após reservar, o app gera o QR Code, Pix copia-e-cola e envio de comprovante.</p>
           </div>
         </div>
 
         <form id="reserveForm" autocomplete="on" class="mobile-form">
           <label>
             Nome completo
-            <input type="text" id="nome" name="nome" placeholder="Digite seu nome" required />
+            <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required />
           </label>
           <label>
-            WhatsApp
+            WhatsApp (com DDD)
             <input type="tel" id="whatsapp" name="whatsapp" placeholder="Ex.: 22 99999-9999" required />
           </label>
           <label>
             Observação opcional
-            <textarea id="observacao" name="observacao" rows="3" placeholder="Alguma observação?"></textarea>
+            <textarea id="observacao" name="observacao" rows="3" placeholder="Mensagem de apoio ou observação"></textarea>
           </label>
-          <button class="button button-main button-full" type="submit" id="reserveBtn">Reservar meus números</button>
+          <button class="button button-main button-full" type="submit" id="reserveBtn">Reservar minhas cotas</button>
         </form>
       </section>
     </main>
 
     <footer class="soft-card footer-card">
-      <p>Agradecemos de coração a cada pessoa que puder ajudar, seja comprando um número ou compartilhando esta rifa. Que Deus abençoe grandemente a vida de todos!</p>
+      <p>
+        Agradecemos de coração a cada amigo, piloto e apoiador que fortalece esta corrente do bem. Que Deus abençoe grandemente a vida de todos!
+      </p>
       <blockquote>“Porque Deus é o nosso refúgio e fortaleza, socorro bem presente na angústia.” — Salmo 46:1</blockquote>
-      <a href="admin.html" class="admin-link">Painel da responsável</a>
     </footer>
   </div>
 
   <div class="bottom-summary" id="bottomSummary" hidden>
     <div>
-      <span>Selecionados</span>
-      <strong id="bottomSelectedText">Nenhum</strong>
+      <span>Cotas Selecionadas</span>
+      <strong id="bottomSelectedText">Nenhuma</strong>
     </div>
     <button class="button button-main" type="button" id="goToFormBtn">Continuar</button>
   </div>
@@ -154,19 +158,19 @@
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <button class="modal-close" type="button" data-close-modal aria-label="Fechar">×</button>
 
-      <div class="modal-heart">💙</div>
-      <h2 id="modalTitle">Reserva feita!</h2>
-      <p class="modal-subtitle">Agora faça o Pix e envie o comprovante pelo próprio app.</p>
+      <div class="modal-heart">🏁</div>
+      <h2 id="modalTitle">Reserva Confirmada!</h2>
+      <p class="modal-subtitle">Efetue o Pix abaixo e envie o comprovante para garantir suas cotas.</p>
 
       <div class="payment-summary">
-        <div><span>Números</span><strong id="modalNumbers">—</strong></div>
-        <div><span>Valor total</span><strong id="modalTotal">—</strong></div>
+        <div><span>Cotas</span><strong id="modalNumbers">—</strong></div>
+        <div><span>Valor Total</span><strong id="modalTotal">—</strong></div>
         <div><span>Chave Pix</span><strong id="modalPixKey">—</strong></div>
       </div>
 
       <div class="qr-area">
         <img id="pixQrCode" alt="QR Code Pix" />
-        <p>Escaneie o QR Code ou copie o Pix copia e cola.</p>
+        <p>Aponte a câmera do seu banco ou utilize o copia-e-cola abaixo.</p>
       </div>
 
       <label class="copy-paste-label">
@@ -176,8 +180,8 @@
 
       <div class="modal-actions-grid">
         <button class="button button-blue" type="button" id="copyPixAgainBtn">Copiar chave</button>
-        <button class="button button-blue" type="button" id="copyPixPayloadBtn">Copiar copia e cola</button>
-        <a class="button button-whatsapp" id="openWhatsAppBtn" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+        <button class="button button-blue" type="button" id="copyPixPayloadBtn">Copiar código</button>
+        <a class="button button-whatsapp" id="openWhatsAppBtn" target="_blank" rel="noopener">Enviar no WhatsApp</a>
       </div>
 
       <div class="proof-upload-card">
@@ -185,7 +189,7 @@
           <div class="icon-bubble small">📎</div>
           <div>
             <h3>Enviar comprovante pelo app</h3>
-            <p>Envie foto ou print do Pix. A responsável vê no painel na hora.</p>
+            <p>Envie foto ou print do Pix. A responsável confere no painel na hora.</p>
           </div>
         </div>
 
@@ -195,48 +199,32 @@
         </label>
 
         <button class="button button-main button-full" type="button" id="sendProofBtn">Enviar comprovante</button>
-        <p class="tiny-warning">Por segurança, a confirmação final deve ser conferida no banco pela responsável.</p>
+        <p class="tiny-warning">Por segurança, a confirmação final é conferida no banco pela responsável.</p>
         <div id="proofMessage" class="message-box" hidden></div>
       </div>
     </div>
   </div>
 
-  <script src="./assets/config.js?v=20260708-share-link-2"></script>
-  <script src="./assets/app.js?v=20260708-share-link-2"></script>
+  <!-- Fallback de Configuração Pública Sanitizada -->
   <script>
-    (function corrigirCompartilhamento() {
-      const LINK_RIFA = "https://acecarmorj.github.io/acaoenteamigos/";
-      const botaoCompartilhar = document.getElementById("shareBtn");
-      if (!botaoCompartilhar) return;
-
-      function abrirCompartilhamento(event) {
-        if (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          if (typeof event.stopImmediatePropagation === "function") event.stopImmediatePropagation();
-        }
-
-        const cfg = window.RIFA_CONFIG || {};
-        const valor = Number(cfg.VALOR_NUMERO || 10).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-        const pix = String(cfg.PIX_KEY || "229922848326").trim();
-        const mensagem = [
-          "Rifa Solidária — Ajude Davi e Vitória",
-          "",
-          "Estamos realizando uma rifa para ajudar nos custos de transporte da mamãe Juliana até o hospital em Juiz de Fora.",
-          `Valor: ${valor} por número`,
-          `Pix: ${pix}`,
-          "",
-          "Escolha seu número pelo link:",
-          LINK_RIFA,
-          "",
-          "Toda ajuda faz a diferença."
-        ].join("\n");
-
-        window.open(`https://wa.me/?text=${encodeURIComponent(mensagem)}`, "_blank", "noopener");
-      }
-
-      botaoCompartilhar.addEventListener("click", abrirCompartilhamento, true);
-    })();
+    window.RIFA_CONFIG = window.RIFA_CONFIG || {
+      NOME_RIFA: "Ação Entre Amigos — Rifa Solidária Davi e Vitória (Edição Motocross)",
+      TITULO_CURTO: "Rifa Motocross Solidária",
+      SUBTITULO: "Ação Entre Amigos — Davi e Vitória",
+      RESPONSAVEL_NOME: "Juliana",
+      WHATSAPP_RESPONSAVEL: "",
+      DATA_SORTEIO: "A definir",
+      PREMIO_RIFA: "A definir",
+      PIX_KEY: "22992848346",
+      PIX_RECEBEDOR: "JULIANA",
+      PIX_CIDADE: "CARMO",
+      VALOR_NUMERO: 10,
+      QUANTIDADE_NUMEROS: 100,
+      AUTO_CONFIRMAR_COM_COMPROVANTE: false,
+      API_URL: "https://script.google.com/macros/s/AKfycbxPV_Y1h0k_ZbJl5XsF2fx3v8vx-r-s9mOk5SiaCAtKu3D9Ix5F-smWYPvVfv2g0OoN/exec"
+    };
   </script>
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
 </body>
 </html>

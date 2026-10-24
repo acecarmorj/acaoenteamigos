@@ -1,24 +1,43 @@
+/* ========================================================
+   TEMA MOTOCROSS — ALTO IMPACTO VISUAL
+   Paleta: Laranja Motocross (#ff6600, #f97316, #ea580c),
+           Preto Carbono / Grafite (#09090b, #121212, #18181b, #27272a),
+           Amarelo Racing (#ffd600, #facc15, #eab308),
+           Branco Puro & Prata (#ffffff, #f4f4f5, #a1a1aa).
+   Acessibilidade: Contraste WCAG AA/AAA (> 7:1) com texto #121212
+                   sobre fundos laranjas e amarelos.
+   ======================================================== */
+
 :root {
-  --ink: #18344f;
-  --ink-soft: #426079;
-  --blue: #1d74b7;
-  --blue-deep: #14528d;
-  --blue-soft: #e5f4ff;
-  --blue-soft-2: #f3faff;
-  --pink: #f8dce5;
-  --pink-strong: #e990a6;
-  --cream: #fffaf2;
-  --green: #dff5e6;
-  --green-deep: #23784a;
-  --yellow: #fff3bf;
-  --yellow-deep: #886315;
-  --red-soft: #ffe0e1;
-  --red: #b93749;
-  --gray: #eef3f7;
-  --gray-2: #d9e3ec;
+  --orange: #ff7000;
+  --orange-bright: #f97316;
+  --orange-deep: #ea580c;
+  --orange-dark: #c2410c;
+  --orange-glow: rgba(255, 112, 0, 0.45);
+
+  --yellow: #ffd600;
+  --yellow-deep: #eab308;
+  --yellow-soft: #fef08a;
+
+  --carbon-darkest: #09090b;
+  --carbon-black: #121214;
+  --carbon-card: #18181b;
+  --carbon-surface: #222226;
+  --carbon-border: #2e2e34;
+  --carbon-border-bright: #3f3f46;
+
+  --text-main: #f4f4f5;
+  --text-muted: #a1a1aa;
+  --text-contrast-dark: #000000;
+
+  --green-racing: #22c55e;
+  --green-deep: #16a34a;
+
   --white: #ffffff;
-  --shadow: 0 18px 45px rgba(38, 88, 132, 0.16);
-  --radius: 26px;
+  --radius-card: 22px;
+  --radius-badge: 12px;
+  --shadow-card: 0 18px 45px rgba(0, 0, 0, 0.65);
+  --shadow-glow: 0 0 25px rgba(255, 102, 0, 0.35);
 }
 
 * { box-sizing: border-box; }
@@ -28,65 +47,76 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
-  color: var(--ink);
+  font-family: 'Rajdhani', 'Impact', 'Segoe UI Black', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-main);
   background:
-    radial-gradient(circle at 18% 0%, rgba(142, 202, 255, .38), transparent 250px),
-    radial-gradient(circle at 90% 14%, rgba(248, 220, 229, .65), transparent 230px),
-    linear-gradient(180deg, #f4fbff 0%, #ffffff 48%, #f8fbff 100%);
+    radial-gradient(circle at 50% 0%, rgba(255, 102, 0, 0.18), transparent 380px),
+    radial-gradient(circle at 90% 40%, rgba(255, 214, 0, 0.08), transparent 280px),
+    linear-gradient(180deg, #121214 0%, #09090b 45%, #050507 100%);
+  background-attachment: fixed;
 }
 
 button, input, textarea, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
-button:disabled { opacity: .6; cursor: not-allowed; }
+button:disabled { opacity: .55; cursor: not-allowed; }
 
 .mobile-app-shell {
   width: min(100%, 480px);
   margin: 0 auto;
-  padding: 14px 12px 96px;
+  padding: 14px 12px 100px;
 }
 
+/* ========================================================
+   CARDS & CONTAINERS (ESTILO RALI/CARBONO)
+   ======================================================== */
 .hero-card,
-.soft-card,
-.admin-top-card,
-.metric-card,
-.reservation-card {
-  border: 1px solid rgba(207, 225, 239, .92);
-  background: rgba(255,255,255,.94);
-  box-shadow: var(--shadow);
+.soft-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--carbon-border);
+  background: linear-gradient(145deg, #1d1d21, #141416);
+  box-shadow: var(--shadow-card);
 }
 
 .hero-card {
-  position: relative;
-  overflow: hidden;
-  padding: 16px;
-  border-radius: 32px;
+  padding: 18px;
+  border-radius: 26px;
+  border-top: 3px solid var(--orange);
   background:
-    linear-gradient(145deg, rgba(255,255,255,.95), rgba(230,245,255,.96)),
-    radial-gradient(circle at right top, rgba(255,255,255,.7), transparent 180px);
+    radial-gradient(circle at 85% 20%, rgba(255, 102, 0, 0.22), transparent 220px),
+    linear-gradient(150deg, #222227 0%, #17171a 50%, #0f0f11 100%);
 }
 
-.soft-leaf {
+.soft-card {
+  margin-top: 14px;
+  padding: 18px;
+  border-radius: var(--radius-card);
+}
+
+/* Detalhes de bandeira quadriculada sutil / linhas de rali */
+.hero-card::before {
+  content: "";
   position: absolute;
-  width: 110px;
-  height: 110px;
-  border: 2px solid rgba(20,82,141,.12);
-  border-radius: 70% 35% 70% 35%;
-  transform: rotate(32deg);
+  top: 0;
+  right: 0;
+  width: 90px;
+  height: 90px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(255, 102, 0, 0.08),
+    rgba(255, 102, 0, 0.08) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  pointer-events: none;
 }
-.soft-leaf-a { left: -42px; top: -38px; }
-.soft-leaf-b { right: -45px; bottom: 60px; transform: rotate(-25deg); }
 
-.hero-topline,
-.hero-content,
-.hero-stats,
-.title-with-action,
-.reservation-head {
+/* ========================================================
+   HERO SECTION
+   ======================================================== */
+.hero-topline {
   position: relative;
   z-index: 1;
-}
-
-.hero-topline {
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -98,85 +128,116 @@ button:disabled { opacity: .6; cursor: not-allowed; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 11px;
-  border-radius: 999px;
-  color: var(--blue-deep);
-  background: #ffffff;
-  border: 1px solid rgba(29, 116, 183, .16);
-  font-size: .83rem;
-  font-weight: 800;
-  box-shadow: 0 8px 18px rgba(38,88,132,.08);
+  padding: 7px 12px;
+  border-radius: var(--radius-badge);
+  color: var(--text-contrast-dark) !important;
+  background: var(--orange);
+  border: 1px solid var(--orange-bright);
+  font-size: .82rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  box-shadow: 0 4px 14px rgba(255, 102, 0, 0.35);
 }
 
-.mini-pill-light { background: var(--blue-soft); }
+.mini-pill-light {
+  color: var(--text-contrast-dark) !important;
+  background: var(--yellow);
+  border-color: var(--yellow-deep);
+  box-shadow: 0 4px 14px rgba(255, 214, 0, 0.3);
+}
 
 .hero-content {
+  position: relative;
+  z-index: 1;
   display: grid;
-  grid-template-columns: 1fr 128px;
-  gap: 6px;
+  grid-template-columns: 1fr 136px;
+  gap: 10px;
   align-items: center;
 }
 
-.hero-content h1,
-.admin-top-card h1 {
-  margin: 8px 0 8px;
-  color: var(--blue-deep);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(2.15rem, 12vw, 3.8rem);
-  line-height: .95;
-  letter-spacing: -.04em;
+.hero-content h1 {
+  margin: 6px 0 8px;
+  color: var(--white);
+  font-family: 'Impact', 'Segoe UI Black', -apple-system, sans-serif;
+  font-size: clamp(2.1rem, 10.5vw, 3.4rem);
+  line-height: .98;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  text-shadow: 0 4px 18px rgba(0,0,0,0.8), 0 0 20px var(--orange-glow);
 }
 
-.hero-content p,
-.admin-top-card p {
+.hero-content p {
   margin: 0;
-  color: var(--ink-soft);
-  font-size: .98rem;
-  line-height: 1.45;
+  color: var(--text-muted);
+  font-size: .95rem;
+  line-height: 1.4;
+  font-weight: 600;
 }
 
 .hero-illustration {
-  width: 132px;
+  width: 136px;
   max-width: 100%;
-  align-self: end;
-  border-radius: 26px;
-  filter: drop-shadow(0 16px 22px rgba(38,88,132,.15));
+  align-self: center;
+  border-radius: 18px;
+  border: 2px solid var(--carbon-border-bright);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.7), 0 0 22px rgba(255, 102, 0, 0.3);
+  object-fit: cover;
+  transition: transform .25s ease;
 }
 
+.hero-illustration:hover {
+  transform: scale(1.03) rotate(-1deg);
+}
+
+/* ========================================================
+   HERO STATS / DASHBOARD ESPORTIVO
+   ======================================================== */
 .hero-stats {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 9px;
-  margin-top: 14px;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .hero-stats div,
 .mini-info-grid div,
 .payment-summary div,
-.total-card div,
-.reservation-details div {
-  padding: 12px;
-  border-radius: 18px;
-  background: rgba(255,255,255,.78);
-  border: 1px solid rgba(207,225,239,.85);
+.total-card div {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(18, 18, 20, 0.85);
+  border: 1px solid var(--carbon-border);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
-.hero-stats div:first-child { background: #fff; }
-.hero-stats div:last-child { grid-column: 1 / -1; }
+.hero-stats div:first-child {
+  border-left: 3px solid var(--orange);
+}
+
+.hero-stats div:nth-child(2) {
+  border-left: 3px solid var(--yellow);
+}
+
+.hero-stats div:last-child {
+  grid-column: 1 / -1;
+  border-left: 3px solid var(--green-racing);
+}
 
 .hero-stats span,
 .mini-info-grid span,
 .pix-box span,
 .total-card span,
 .payment-summary span,
-.metric-card span,
-.reservation-details span {
+.bottom-summary span {
   display: block;
-  margin-bottom: 4px;
-  color: #6f879c;
+  margin-bottom: 3px;
+  color: var(--text-muted);
   font-size: .72rem;
   font-weight: 900;
-  letter-spacing: .05em;
+  letter-spacing: .08em;
   text-transform: uppercase;
 }
 
@@ -184,70 +245,82 @@ button:disabled { opacity: .6; cursor: not-allowed; }
 .mini-info-grid strong,
 .pix-box strong,
 .total-card strong,
-.payment-summary strong,
-.metric-card strong,
-.reservation-details strong {
+.payment-summary strong {
   display: block;
-  color: var(--ink);
-  font-size: 1.05rem;
+  color: var(--white);
+  font-size: 1.15rem;
+  font-weight: 900;
   word-break: break-word;
 }
 
-.soft-card {
-  margin-top: 12px;
-  padding: 16px;
-  border-radius: var(--radius);
-}
-
+/* ========================================================
+   TITULOS E CABEÇALHOS DOS CARDS
+   ======================================================== */
 .card-title-row,
 .title-left {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
 }
 
 .title-with-action {
   justify-content: space-between;
-  gap: 10px;
 }
 
 .icon-bubble {
   flex: 0 0 auto;
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, var(--blue-soft), #ffffff);
-  border: 1px solid rgba(29, 116, 183, .14);
-  box-shadow: 0 8px 18px rgba(38,88,132,.08);
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #27272a, #18181b);
+  border: 1px solid var(--orange);
+  color: var(--orange);
+  box-shadow: 0 0 16px rgba(255, 102, 0, 0.25);
+  font-size: 1.3rem;
 }
 
-.icon-bubble.small { width: 34px; height: 34px; border-radius: 13px; }
+.icon-bubble.small {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 1rem;
+}
 
 .card-title-row h2,
 .card-title-row h3 {
-  margin: 0 0 3px;
-  color: var(--blue-deep);
-  font-size: 1.25rem;
-  line-height: 1.1;
+  margin: 0 0 2px;
+  color: var(--white);
+  font-family: 'Impact', 'Segoe UI Black', sans-serif;
+  font-size: 1.35rem;
+  letter-spacing: .03em;
+  text-transform: uppercase;
 }
-.card-title-row h3 { font-size: 1.02rem; }
-.card-title-row p { margin: 0; color: var(--ink-soft); font-size: .9rem; line-height: 1.35; }
+
+.card-title-row h3 { font-size: 1.1rem; }
+.card-title-row p { margin: 0; color: var(--text-muted); font-size: .88rem; font-weight: 500; }
 
 .main-text,
 .support-text,
 .footer-card p {
-  color: var(--ink);
+  color: var(--text-main);
   line-height: 1.55;
-  font-size: .96rem;
+  font-size: .95rem;
+  font-weight: 500;
 }
-.support-text { color: var(--ink-soft); }
 
+.support-text {
+  color: var(--text-muted);
+}
+
+/* ========================================================
+   PIX BOX & INFORMAÇÕES
+   ======================================================== */
 .mini-info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 9px;
+  gap: 8px;
   margin: 14px 0;
 }
 
@@ -256,13 +329,17 @@ button:disabled { opacity: .6; cursor: not-allowed; }
   grid-template-columns: 1fr auto;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
-  padding: 12px;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #eef8ff, #ffffff);
-  border: 1px dashed rgba(29,116,183,.45);
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #1c1c20, #131315);
+  border: 1px dashed var(--orange);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 
+/* ========================================================
+   BOTÕES DE ALTA TRAÇÃO (WCAG AA CONFORME)
+   ======================================================== */
 .button,
 .small-button {
   display: inline-flex;
@@ -272,167 +349,306 @@ button:disabled { opacity: .6; cursor: not-allowed; }
   text-decoration: none;
   cursor: pointer;
   font-weight: 900;
-  min-height: 48px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  min-height: 50px;
+  transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
 }
 
 .button {
-  gap: 7px;
-  padding: 12px 15px;
-  border-radius: 16px;
-  transition: transform .13s ease, box-shadow .13s ease;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 14px;
 }
-.button:active { transform: translateY(1px) scale(.99); }
+
+.button:active {
+  transform: translateY(2px) scale(.98);
+}
+
 .button-full { width: 100%; }
-.button-main { color: #fff; background: linear-gradient(135deg, var(--blue), var(--blue-deep)); box-shadow: 0 12px 24px rgba(29,116,183,.25); }
-.button-blue { color: var(--blue-deep); background: var(--blue-soft); }
-.button-whatsapp { color: #fff; background: linear-gradient(135deg, #23b264, #168a4d); box-shadow: 0 12px 22px rgba(22,138,77,.22); }
-.button-danger { color: #fff; background: linear-gradient(135deg, #c94b5f, #a5273c); }
+
+/* Botão Principal: Laranja Motocross com texto PRETO #121212 para contraste > 7:1 */
+.button-main {
+  color: var(--text-contrast-dark) !important;
+  background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+  box-shadow: 0 10px 25px rgba(255, 102, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.button-main:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 12px 30px rgba(255, 102, 0, 0.6);
+}
+
+/* Botão Secundário / Ação rápida */
+.button-blue {
+  color: var(--white) !important;
+  background: #27272a;
+  border: 1px solid var(--carbon-border-bright);
+}
+
+.button-blue:hover {
+  background: #323238;
+}
+
+/* Botão WhatsApp — Verde Rali de Alto Contraste WCAG AA (> 5.0:1) */
+.button-whatsapp {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #15803d, #166534);
+  box-shadow: 0 10px 24px rgba(22, 101, 52, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.button-whatsapp:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 12px 28px rgba(34, 197, 94, 0.5);
+}
 
 .small-button {
   min-height: 38px;
-  padding: 8px 10px;
-  border-radius: 13px;
-  color: var(--blue-deep);
-  background: var(--blue-soft);
-  font-size: .83rem;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--text-contrast-dark) !important;
+  background: var(--yellow);
+  font-size: .82rem;
+  font-weight: 900;
+  box-shadow: 0 4px 12px rgba(255, 214, 0, 0.25);
 }
 
+/* ========================================================
+   LEGENDA DOS NÚMEROS (ESTILO RALI)
+   ======================================================== */
 .legend-mobile {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 7px;
   margin: 14px 0;
 }
+
 .legend-mobile span {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 9px;
-  border-radius: 999px;
-  color: var(--ink-soft);
-  background: var(--blue-soft-2);
-  border: 1px solid rgba(207,225,239,.8);
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--text-main);
+  background: #18181b;
+  border: 1px solid var(--carbon-border);
   font-size: .82rem;
   font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
 }
-.status-dot { width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(24,52,79,.12); }
-.status-dot.free { background: var(--green); }
-.status-dot.selected { background: var(--blue); }
-.status-dot.reserved { background: var(--yellow); }
-.status-dot.paid { background: var(--red-soft); }
 
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+.status-dot.free { background: #52525b; }
+.status-dot.selected { background: var(--orange); box-shadow: 0 0 8px var(--orange); }
+.status-dot.reserved { background: var(--yellow); box-shadow: 0 0 8px var(--yellow); }
+.status-dot.paid { background: var(--green-racing); }
+
+/* ========================================================
+   GRADE DE NÚMEROS — PLACAS DE MOTOCROSS
+   ======================================================== */
 .numbers-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 8px;
+  margin-top: 10px;
 }
 
 .number-chip {
   min-height: 48px;
-  border: 1px solid rgba(207,225,239,.95);
-  border-radius: 15px;
-  color: var(--ink);
-  background: #fff;
+  border: 1px solid var(--carbon-border);
+  border-radius: 12px;
+  color: var(--text-main);
+  background: #1c1c20;
+  font-family: 'Impact', 'Segoe UI Black', monospace, sans-serif;
+  font-size: 1.05rem;
   font-weight: 900;
-  box-shadow: 0 6px 15px rgba(38,88,132,.08);
+  letter-spacing: .04em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   cursor: pointer;
+  transition: transform .12s ease, background .15s ease, box-shadow .15s ease, border-color .15s ease;
 }
-.number-chip.selected { color: #fff; background: linear-gradient(135deg, var(--blue), var(--blue-deep)); border-color: transparent; }
-.number-chip.reserved { color: var(--yellow-deep); background: var(--yellow); }
-.number-chip.paid { color: #7d2937; background: var(--red-soft); text-decoration: line-through; }
-.number-chip.proof-sent { box-shadow: inset 0 -4px 0 rgba(29,116,183,.28), 0 6px 15px rgba(38,88,132,.08); }
-.number-chip:disabled { cursor: not-allowed; opacity: .9; }
 
-.total-card,
-.payment-summary,
-.reservation-details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
+.number-chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--orange);
 }
-.total-card { margin-top: 12px; }
-.payment-summary { margin: 12px 0; }
-.payment-summary div:last-child { grid-column: 1 / -1; }
 
-.mobile-form {
-  display: grid;
-  gap: 12px;
+/* Número Selecionado: Laranja com texto #121212 (> 7:1) */
+.number-chip.selected {
+  color: var(--text-contrast-dark) !important;
+  background: linear-gradient(135deg, var(--orange), var(--orange-deep));
+  border-color: var(--yellow);
+  box-shadow: 0 0 16px rgba(255, 102, 0, 0.7);
+  transform: scale(1.04);
+}
+
+/* Número Reservado: Amarelo com texto #121212 (> 7:1) */
+.number-chip.reserved {
+  color: var(--text-contrast-dark) !important;
+  background: var(--yellow);
+  border-color: var(--yellow-deep);
+  box-shadow: 0 0 10px rgba(255, 214, 0, 0.4);
+}
+
+/* Número Pago */
+.number-chip.paid {
+  color: #71717a !important;
+  background: #131316;
+  border-color: #27272a;
+  text-decoration: line-through;
+  opacity: .55;
+  box-shadow: none;
+}
+
+.number-chip.proof-sent {
+  box-shadow: inset 0 -3px 0 var(--yellow), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.number-chip:disabled {
+  cursor: not-allowed;
+  opacity: .5;
+}
+
+/* ========================================================
+   TOTAL / CARRINHO FLUTUANTE
+   ======================================================== */
+.total-card {
   margin-top: 14px;
 }
-.mobile-form label,
-.copy-paste-label,
-.filter-label {
-  display: grid;
-  gap: 6px;
-  color: var(--ink-soft);
-  font-size: .88rem;
-  font-weight: 900;
-}
-
-input,
-textarea,
-select {
-  width: 100%;
-  border: 1px solid rgba(207,225,239,.98);
-  border-radius: 16px;
-  background: #fff;
-  color: var(--ink);
-  padding: 13px 14px;
-  min-height: 50px;
-  outline: none;
-  box-shadow: 0 6px 15px rgba(38,88,132,.05);
-}
-textarea { resize: vertical; }
-input:focus, textarea:focus, select:focus { border-color: rgba(29,116,183,.65); box-shadow: 0 0 0 4px rgba(29,116,183,.11); }
-
-.message-box {
-  margin: 11px 0;
-  padding: 12px;
-  border-radius: 16px;
-  background: var(--blue-soft);
-  color: var(--blue-deep);
-  border: 1px solid rgba(29,116,183,.16);
-  font-weight: 800;
-  font-size: .9rem;
-}
-.message-box.error { background: var(--red-soft); color: #8e2638; border-color: rgba(185,55,73,.2); }
-.message-box.success { background: var(--green); color: var(--green-deep); border-color: rgba(35,120,74,.18); }
-.message-box.info { background: var(--blue-soft); color: var(--blue-deep); }
-
-.footer-card { text-align: center; }
-.footer-card blockquote {
-  margin: 12px 0;
-  padding: 12px;
-  border-radius: 18px;
-  background: var(--cream);
-  color: var(--ink);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-weight: 700;
-  line-height: 1.45;
-}
-.admin-link { color: var(--blue-deep); font-weight: 900; }
 
 .bottom-summary {
   position: fixed;
   left: 50%;
-  bottom: max(10px, env(safe-area-inset-bottom));
+  bottom: max(12px, env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 20;
   width: min(calc(100% - 20px), 460px);
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  border-radius: 24px;
-  border: 1px solid rgba(207,225,239,.95);
-  background: rgba(255,255,255,.96);
-  box-shadow: 0 12px 40px rgba(24,52,79,.22);
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--orange);
+  background: rgba(24, 24, 27, 0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 102, 0, 0.3);
 }
-.bottom-summary span { display: block; color: #6f879c; font-size: .72rem; font-weight: 900; text-transform: uppercase; }
-.bottom-summary strong { color: var(--ink); font-size: .96rem; }
-.bottom-summary .button { min-height: 44px; }
 
+.bottom-summary strong {
+  color: var(--white);
+  font-size: 1.05rem;
+}
+
+.bottom-summary .button {
+  min-height: 44px;
+  padding: 10px 16px;
+}
+
+/* ========================================================
+   FORMULÁRIO DE RESERVA
+   ======================================================== */
+.mobile-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.mobile-form label,
+.copy-paste-label {
+  display: grid;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: .88rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid var(--carbon-border);
+  border-radius: 14px;
+  background: #141416;
+  color: var(--white);
+  padding: 14px;
+  min-height: 50px;
+  outline: none;
+  font-family: inherit;
+  font-size: .95rem;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.25);
+}
+
+/* ========================================================
+   MENSAGENS DE STATUS
+   ======================================================== */
+.message-box {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: .9rem;
+}
+
+.message-box.info {
+  background: rgba(255, 102, 0, 0.15);
+  color: var(--orange-bright);
+  border: 1px solid var(--orange);
+}
+
+.message-box.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid #ef4444;
+}
+
+.message-box.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid #22c55e;
+}
+
+/* ========================================================
+   RODAPÉ SOLIDÁRIO
+   ======================================================== */
+.footer-card {
+  text-align: center;
+  border-bottom: 3px solid var(--yellow);
+}
+
+.footer-card blockquote {
+  margin: 14px 0;
+  padding: 14px;
+  border-radius: 14px;
+  background: #141416;
+  border-left: 3px solid var(--orange);
+  color: var(--text-muted);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* ========================================================
+   MODAL PIX & COMPROVANTE
+   ======================================================== */
 .modal {
   position: fixed;
   inset: 0;
@@ -441,154 +657,181 @@ input:focus, textarea:focus, select:focus { border-color: rgba(29,116,183,.65); 
   align-items: flex-end;
   justify-content: center;
 }
+
 .modal.open { display: flex; }
-.modal-backdrop { position: absolute; inset: 0; background: rgba(24,52,79,.48); backdrop-filter: blur(5px); }
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+}
+
 .modal-card {
   position: relative;
   width: min(100%, 480px);
   max-height: 92vh;
-  overflow: auto;
-  padding: 18px 14px 24px;
-  border-radius: 30px 30px 0 0;
-  background: linear-gradient(180deg, #ffffff, #f7fbff);
-  box-shadow: 0 -18px 45px rgba(24,52,79,.23);
+  overflow-y: auto;
+  padding: 22px 16px 28px;
+  border-radius: 28px 28px 0 0;
+  background: linear-gradient(180deg, #222227 0%, #151518 100%);
+  border-top: 3px solid var(--orange);
+  box-shadow: 0 -18px 50px rgba(0, 0, 0, 0.85);
 }
+
 .modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   display: grid;
   place-items: center;
   width: 38px;
   height: 38px;
   border: 0;
-  border-radius: 14px;
-  color: var(--blue-deep);
-  background: var(--blue-soft);
-  font-size: 1.45rem;
+  border-radius: 12px;
+  color: var(--text-muted);
+  background: #27272a;
+  font-size: 1.4rem;
   font-weight: 900;
+  cursor: pointer;
 }
-.modal-heart { font-size: 2rem; text-align: center; }
-.modal-card h2 { margin: 4px 40px 6px; color: var(--blue-deep); text-align: center; font-family: Georgia, 'Times New Roman', serif; font-size: 2rem; }
-.modal-subtitle { margin: 0 26px 12px; color: var(--ink-soft); text-align: center; line-height: 1.4; }
-.qr-area { text-align: center; margin: 12px 0; }
-.qr-area img { width: min(260px, 80vw); border-radius: 20px; border: 10px solid #fff; box-shadow: 0 12px 30px rgba(38,88,132,.18); }
-.qr-area p { margin: 7px 0 0; color: var(--ink-soft); font-size: .9rem; }
-.copy-paste-label textarea { min-height: 100px; font-size: .78rem; }
-.modal-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 12px 0; }
-.modal-actions-grid .button-whatsapp { grid-column: 1 / -1; }
+
+.modal-close:hover {
+  color: var(--white);
+  background: #3f3f46;
+}
+
+.modal-heart {
+  font-size: 2.2rem;
+  text-align: center;
+}
+
+.modal-card h2 {
+  margin: 6px 40px 6px;
+  color: var(--white);
+  text-align: center;
+  font-family: 'Impact', 'Segoe UI Black', sans-serif;
+  font-size: 1.85rem;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+
+.modal-subtitle {
+  margin: 0 20px 14px;
+  color: var(--text-muted);
+  text-align: center;
+  font-size: .92rem;
+}
+
+.payment-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.payment-summary div:last-child {
+  grid-column: 1 / -1;
+  border-left: 3px solid var(--yellow);
+}
+
+.qr-area {
+  text-align: center;
+  margin: 16px 0;
+  padding: 16px;
+  border-radius: 20px;
+  background: #18181b;
+  border: 1px solid var(--carbon-border);
+}
+
+.qr-area img {
+  width: min(240px, 75vw);
+  border-radius: 14px;
+  border: 8px solid #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.qr-area p {
+  margin: 10px 0 0;
+  color: var(--text-muted);
+  font-size: .88rem;
+}
+
+.copy-paste-label textarea {
+  min-height: 90px;
+  font-size: .8rem;
+  color: var(--yellow);
+}
+
+.modal-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin: 14px 0;
+}
+
+.modal-actions-grid .button-whatsapp {
+  grid-column: 1 / -1;
+}
+
 .proof-upload-card {
-  margin-top: 12px;
-  padding: 14px;
-  border-radius: 22px;
-  background: var(--blue-soft-2);
-  border: 1px solid rgba(207,225,239,.92);
+  margin-top: 14px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #18181b;
+  border: 1px solid var(--carbon-border);
 }
+
 .compact-title { align-items: center; }
+
 .file-label {
   display: block;
   margin: 12px 0;
+  cursor: pointer;
 }
-.file-label input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+.file-label input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
 .file-label span {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 52px;
   padding: 12px;
-  border-radius: 17px;
-  color: var(--blue-deep);
-  background: #fff;
-  border: 1px dashed rgba(29,116,183,.45);
-  font-weight: 900;
+  border-radius: 14px;
+  color: var(--orange-bright);
+  background: #141416;
+  border: 1px dashed var(--orange);
+  font-weight: 800;
+  font-size: .92rem;
   text-align: center;
-}
-.tiny-warning { margin: 9px 0 0; color: var(--ink-soft); font-size: .78rem; line-height: 1.35; }
-
-/* ADMIN */
-.admin-app-shell { padding-bottom: 30px; }
-.admin-top-card {
-  padding: 16px;
-  border-radius: 28px;
-  background: linear-gradient(145deg, #ffffff, #eaf7ff);
-}
-.admin-top-card h1 { font-size: clamp(2rem, 11vw, 3.4rem); }
-.login-card { margin-top: 12px; }
-.admin-metrics-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 12px;
-}
-.metric-card {
-  padding: 14px;
-  border-radius: 22px;
-  background: rgba(255,255,255,.94);
-}
-.metric-card.wide { grid-column: 1 / -1; background: linear-gradient(135deg, var(--blue-soft), #ffffff); }
-.metric-card strong { font-size: 1.45rem; color: var(--blue-deep); }
-.admin-actions-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 9px;
-  margin: 14px 0;
-}
-.filter-label { margin-top: 4px; }
-.auto-refresh-note { margin: 10px 0 0; color: var(--ink-soft); font-size: .8rem; font-weight: 800; }
-.reservation-list { display: grid; gap: 11px; margin-top: 12px; }
-.reservation-card {
-  padding: 14px;
-  border-radius: 24px;
-  background: rgba(255,255,255,.95);
-}
-.reservation-card.has-proof { border-color: rgba(29,116,183,.45); box-shadow: 0 18px 45px rgba(29,116,183,.18); }
-.reservation-card.pago { background: linear-gradient(180deg, #fff, #fff8f8); }
-.reservation-card.livre { opacity: .9; box-shadow: 0 8px 22px rgba(38,88,132,.08); }
-.reservation-number {
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 18px;
-  color: #fff;
-  background: linear-gradient(135deg, var(--blue), var(--blue-deep));
-  font-size: 1.25rem;
-  font-weight: 950;
-  box-shadow: 0 10px 22px rgba(29,116,183,.2);
-}
-.reservation-head h3 { margin: 5px 0 2px; color: var(--ink); font-size: 1.02rem; }
-.reservation-head p { margin: 0; color: var(--ink-soft); font-size: .9rem; }
-.status-badge {
-  display: inline-flex;
-  padding: 6px 9px;
-  border-radius: 999px;
-  font-size: .72rem;
-  font-weight: 950;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-}
-.status-badge.free { color: var(--green-deep); background: var(--green); }
-.status-badge.reserved { color: var(--yellow-deep); background: var(--yellow); }
-.status-badge.paid { color: #8d2638; background: var(--red-soft); }
-.status-badge.proof { color: var(--blue-deep); background: var(--blue-soft); }
-.reservation-details { margin: 12px 0; grid-template-columns: 1fr 1fr; }
-.reservation-details div { padding: 10px; }
-.reservation-details strong { font-size: .9rem; }
-.obs-text { margin: 8px 0; padding: 10px; border-radius: 15px; background: var(--cream); color: var(--ink-soft); line-height: 1.4; }
-.reservation-actions { display: grid; grid-template-columns: 1fr; gap: 8px; }
-.reservation-actions .button { min-height: 44px; font-size: .9rem; }
-.empty-card { text-align: center; color: var(--ink-soft); font-weight: 800; }
-
-@media (min-width: 430px) {
-  .numbers-grid { grid-template-columns: repeat(5, 1fr); }
-  .admin-actions-grid { grid-template-columns: 1fr 1fr; }
-  .admin-actions-grid .button-main { grid-column: 1 / -1; }
+  transition: background .15s ease;
 }
 
-@media (max-width: 360px) {
-  .mobile-app-shell { padding-left: 9px; padding-right: 9px; }
-  .hero-content { grid-template-columns: 1fr 112px; }
-  .hero-illustration { width: 112px; }
-  .number-chip { min-height: 44px; border-radius: 13px; font-size: .92rem; }
+.file-label span:hover {
+  background: rgba(255, 102, 0, 0.1);
+}
+
+.tiny-warning {
+  margin: 10px 0 0;
+  color: var(--text-muted);
+  font-size: .78rem;
+  line-height: 1.4;
+}
+
+/* ========================================================
+   RESPONSIVIDADE MOBILE
+   ======================================================== */
+@media (max-width: 380px) {
+  .mobile-app-shell { padding-left: 8px; padding-right: 8px; }
+  .hero-content { grid-template-columns: 1fr 110px; }
+  .hero-illustration { width: 110px; }
+  .number-chip { min-height: 44px; font-size: .95rem; }
   .modal-actions-grid { grid-template-columns: 1fr; }
 }
