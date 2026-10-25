@@ -1489,3 +1489,34 @@ textarea,
     padding: 0 1px !important;
   }
 }
+
+
+/* ========================================================
+   ACABAMENTO FINO COMERCIAL & ÁUDIO (ALMIR #738)
+   ======================================================== */
+.sound-toggle-btn {
+  transition: all 0.15s ease;
+  font-weight: 700;
+  font-size: 0.75rem;
+  user-select: none;
+}
+.sound-toggle-btn:hover {
+  background: #f1f5f9 !important;
+  border-color: #0f172a !important;
+}
+.sound-toggle-btn:active {
+  transform: scale(0.96);
+}
+.prize-showcase-card {
+  background: #ffffff;
+  border-radius: 16px;
+}
+.prize-item {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .prize-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+  }
+}

@@ -21,7 +21,9 @@
         <span class="mini-pill">🏍️ HONDA XRE 190 • 2018</span>
         <span class="mini-pill" style="background: #dc2626; color: #ffffff; font-weight: 800;">🎁 + CAPACETE INCLUSO</span>
         <span class="mini-pill mini-pill-light">🏁 100 PAINÉIS • 0000–9999</span>
+        <button type="button" id="toggleSoundBtn" class="mini-pill sound-toggle-btn" aria-label="Ligar ou desligar som da moto" style="cursor: pointer; border: 1px solid #cbd5e1; background: #ffffff;">🔊 Som</button>
       </div>
+      <audio id="engineAudio" preload="none" src="assets/motorcycle-rev.mp3"></audio>
 
       <div class="hero-content">
         <div>
@@ -331,5 +333,37 @@
   </script>
   <script src="assets/config.js"></script>
   <script src="assets/app.js?v=clean9_mobile"></script>
+  <script>
+    (function initSound() {
+      const audio = document.getElementById('engineAudio');
+      const btn = document.getElementById('toggleSoundBtn');
+      if (!audio || !btn) return;
+      let soundEnabled = true;
+      let hasPlayed = false;
+
+      function playRev() {
+        if (!soundEnabled || hasPlayed) return;
+        audio.play().then(() => {
+          hasPlayed = true;
+        }).catch(() => {});
+      }
+
+      // Play once on first user click anywhere in the app
+      document.addEventListener('click', playRev, { once: true });
+
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        soundEnabled = !soundEnabled;
+        if (soundEnabled) {
+          btn.textContent = '🔊 Som';
+          audio.play().catch(() => {});
+        } else {
+          btn.textContent = '🔇 Mudo';
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
