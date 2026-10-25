@@ -6,7 +6,7 @@ Sistema de rifa beneficente online com escolha de números, controle de bilhetes
 ---
 
 ## 🌿 Ramo Git e Origem
-- Repositório `https://github.com/acecarmorj/acaoenteamigos.git`.
+- Repositório `https://github.com/acecarmorj/acaoentreamigos.git`.
 
 ---
 
