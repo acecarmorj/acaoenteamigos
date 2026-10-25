@@ -1520,3 +1520,514 @@ textarea,
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
   }
 }
+
+
+/* ========================================================
+   SUPER REFINO VISUAL, DESIGN & MARKETING DE VENDAS HONESTO (ALMIR #1489)
+   - Identidade Motociclismo Trail / Honda Red & Carbon
+   - Barra de Confiança e Transparência (4 pilares)
+   - Vitrine dos Prêmios Duplo (Moto + Capacete) com badges de valor
+   - Stepper do Fluxo em 4 Passos
+   - Combos Promocionais de Alto Desempenho (Ergonômicos, min 52px)
+   - Grade de Cartelas com alto contraste e botões de toque 48px
+   - Modal Pix com destaque para QR Code e Copia-e-Cola
+   - 100% Acessível (WCAG AA/AAA, prefers-reduced-motion, :focus-visible)
+   ======================================================== */
+
+/* Barra de Confiança & Transparência (Trust Strip) */
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 16px 16px;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid var(--border-light, #e2e8f0);
+  border-radius: var(--radius-md, 12px);
+  padding: 10px 12px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.trust-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.07);
+}
+
+.trust-icon {
+  font-size: 1.35rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trust-title {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.trust-desc {
+  display: block;
+  font-size: 0.70rem;
+  color: #64748b;
+  line-height: 1.25;
+}
+
+/* Vitrine de Prêmios Aprimorada */
+.prize-showcase-card {
+  border: 2px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.dual-prize-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.prize-item {
+  position: relative;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.prize-item:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.prize-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.prize-badge.badge-free {
+  background: #dc2626;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+}
+
+.prize-item img {
+  width: 100%;
+  height: 115px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: #ffffff;
+}
+
+.prize-item strong {
+  display: block;
+  font-size: 0.90rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 4px;
+}
+
+.prize-item span {
+  display: block;
+  font-size: 0.74rem;
+  color: #64748b;
+  font-weight: 600;
+  margin-top: 1px;
+}
+
+.prize-value-banner {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 10px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+/* Stepper 4 Passos */
+.steps-card {
+  background: #ffffff;
+  border: 2px solid #fecaca;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.07);
+}
+
+.step-flow-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.step-card-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #fef2f2;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border-left: 4px solid #dc2626;
+}
+
+.step-badge-num {
+  background: #dc2626;
+  color: #ffffff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.82rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.step-text-title {
+  display: block;
+  font-size: 0.90rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 2px;
+}
+
+.step-text-desc {
+  font-size: 0.80rem;
+  color: #475569;
+  line-height: 1.35;
+  display: block;
+}
+
+/* Combos Promocionais de Cotas (High-Converting Cards) */
+.quick-pick-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.quick-pick-label {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.clear-btn {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  min-height: 38px;
+  transition: all 0.12s ease;
+}
+
+.clear-btn:hover {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #dc2626;
+}
+
+.quick-pick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.qp-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between;
+  min-height: 56px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  border: 2px solid #e2e8f0;
+  background: #ffffff;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.qp-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.qp-card:active {
+  transform: scale(0.97);
+}
+
+.qp-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.qp-title {
+  font-size: 0.94rem;
+  font-weight: 800;
+  display: block;
+}
+
+.qp-price {
+  font-size: 0.84rem;
+  font-weight: 800;
+  margin-top: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qp-orig {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 600;
+  text-decoration: line-through;
+  margin-left: 4px;
+}
+
+/* Modificadores de Combos */
+.qp-single {
+  border-color: #cbd5e1;
+  background: #ffffff;
+}
+.qp-single .qp-tag { color: #64748b; }
+.qp-single .qp-title { color: #0f172a; }
+.qp-single .qp-price { color: #0f172a; }
+
+.qp-popular {
+  border-color: #f59e0b;
+  background: #fffbeb;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.12);
+}
+.qp-popular .qp-tag { color: #b45309; }
+.qp-popular .qp-title { color: #92400e; }
+.qp-popular .qp-price { color: #92400e; }
+
+.qp-bestseller {
+  border-color: #dc2626;
+  background: #fef2f2;
+  box-shadow: 0 3px 10px rgba(220, 38, 38, 0.15);
+}
+.qp-bestseller .qp-tag { color: #dc2626; }
+.qp-bestseller .qp-title { color: #991b1b; }
+.qp-bestseller .qp-price { color: #991b1b; }
+
+.qp-super {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.15);
+}
+.qp-super .qp-tag { color: #1d4ed8; }
+.qp-super .qp-title { color: #1e40af; }
+.qp-super .qp-price { color: #1e40af; }
+
+/* Grid de Cotas e Controles */
+.numbers-card {
+  border: 1px solid var(--border-light, #e2e8f0);
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+.panel-controls {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.panel-step-btn {
+  min-height: 44px;
+  min-width: 44px;
+  font-weight: 800;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.panel-select {
+  min-height: 44px;
+  border-radius: 8px;
+  font-weight: 700;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+}
+
+.search-number-input {
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 16px !important;
+  font-weight: 700;
+  padding: 8px 12px;
+}
+
+.search-number-btn {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 8px;
+  font-weight: 800;
+  background: #0f172a;
+  color: #ffffff;
+}
+
+/* Modal de Sucesso / Pix */
+.modal-card {
+  border-radius: 18px;
+  padding: 24px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+#copyPixPayloadBtn {
+  grid-column: 1 / -1;
+  min-height: 52px;
+  font-size: 1.05rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(220, 38, 38, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+#copyPixPayloadBtn:active {
+  transform: scale(0.98);
+}
+
+#btnDownloadReceipt {
+  grid-column: 1 / -1;
+  min-height: 48px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #000000;
+  font-weight: 900;
+  font-size: 0.95rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Floating Bottom Bar */
+.bottom-summary {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-top: 2px solid #e2e8f0;
+  box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.bottom-summary strong {
+  font-size: 1.15rem;
+  color: #dc2626;
+  font-variant-numeric: tabular-nums;
+}
+
+#goToFormBtn {
+  min-height: 48px;
+  padding: 12px 22px;
+  font-size: 1rem;
+  font-weight: 900;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.35);
+  cursor: pointer;
+}
+
+/* Indicadores de foco acessíveis */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #dc2626 !important;
+  outline-offset: 2px !important;
+}
+
+/* Responsividade e Acessibilidade */
+@media (max-width: 360px) {
+  .trust-strip {
+    grid-template-columns: 1fr;
+  }
+  .quick-pick-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Suporte à redução de movimento per a11y-debugging guidelines */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+

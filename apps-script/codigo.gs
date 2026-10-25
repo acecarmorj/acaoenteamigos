@@ -24,6 +24,14 @@ const DEFAULT_VALOR_NUMERO = VALOR_POR_NUMERO;
 const COMPROVANTES_FOLDER_NAME = 'Comprovantes - Rifa Honda XRE 190';
 const BATCH_SIZE = 1000;
 
+// Pacotes promocionais canônicos (quantidade, valor em centavos). Devem espelhar PROMOCOES_COTAS em assets/config.js.
+const PACOTES_CENTAVOS = [[10, 17000], [6, 10000], [3, 5000]];
+const MAX_COTAS_POR_RESERVA = 200;
+const MAX_COMPROVANTE_BYTES = 5 * 1024 * 1024;
+const MIMES_COMPROVANTE = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+// Ações administrativas exigem a propriedade de script ADMIN_TOKEN (Configurações do projeto > Propriedades do script).
+// A confirmação automática só liga se a propriedade AUTO_CONFIRMAR for 'true'; o navegador nunca decide isso.
+
 const COLS = [
   'numero',
   'status',
@@ -63,6 +71,8 @@ function doPost(e) {
 function handleRequest_(e) {
   try {
     const payload = parsePayload_(e);
+    // Definido no servidor (sobrescreve qualquer valor do cliente): ações admin só via POST, nunca na URL.
+    payload.__viaPost = Boolean(e && e.postData && e.postData.contents);
     const action = String(payload.action || 'listar').trim();
 
     if (action === 'listar') {
@@ -84,20 +94,24 @@ function handleRequest_(e) {
     }
 
     if (action === 'confirmarPagamento') {
+      requireAdmin_(payload);
       payload.status = 'pago';
       return json_(atualizarStatus_(payload));
     }
 
     if (action === 'liberarNumero') {
+      requireAdmin_(payload);
       payload.status = 'livre';
       return json_(atualizarStatus_(payload));
     }
 
     if (action === 'atualizarStatus') {
+      requireAdmin_(payload);
       return json_(atualizarStatus_(payload));
     }
 
     if (action === 'inicializar') {
+      requireAdmin_(payload);
       const prefillAll = payload.prefillAll === true || payload.prefillAll === 'true';
       const msg = inicializarPlanilha_(prefillAll);
       return json_({ ok: true, message: msg });
@@ -107,6 +121,59 @@ function handleRequest_(e) {
   } catch (err) {
     return json_({ ok: false, error: err.message || String(err) });
   }
+}
+
+/** Falha fechada: sem ADMIN_TOKEN configurado ou com token errado, nenhuma ação administrativa roda. */
+function requireAdmin_(payload) {
+  if (!payload.__viaPost) throw new Error('Ações administrativas só por POST.');
+  const token = PropertiesService.getScriptProperties().getProperty('ADMIN_TOKEN');
+  if (!token || String(payload.token || '') !== token) {
+    throw new Error('Não autorizado.');
+  }
+}
+
+/** Texto livre vindo do público: corta tamanho, remove controles e neutraliza fórmulas de planilha (=, +, -, @). */
+function cleanText_(value, maxLen) {
+  let text = String(value === undefined || value === null ? '' : value)
+    .replace(/[\u0000-\u001f\u007f]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, maxLen);
+  if (/^[=+\-@]/.test(text)) text = "'" + text;
+  return text;
+}
+
+/** Número BR canônico para comparação exata: só dígitos, sem o prefixo de país 55 (DDD + número = 10 ou 11 dígitos). */
+function canonicalPhone_(value) {
+  let digits = String(value || '').replace(/\D/g, '');
+  if ((digits.length === 12 || digits.length === 13) && digits.indexOf('55') === 0) digits = digits.slice(2);
+  return digits;
+}
+
+/** Confere os primeiros bytes do arquivo (não confia no MIME enviado pelo navegador). */
+function assinaturaComprovanteValida_(base64, mime) {
+  let bytes;
+  try {
+    bytes = Utilities.base64Decode(base64);
+  } catch (err) {
+    return false;
+  }
+  if (!bytes || bytes.length < 12 || bytes.length > MAX_COMPROVANTE_BYTES) return false;
+  const b = Array.prototype.slice.call(bytes, 0, 12).map(function (v) { return v & 0xff; });
+  const ascii = function (from, to) { return String.fromCharCode.apply(null, b.slice(from, to)); };
+  if (mime === 'image/jpeg') return b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff;
+  if (mime === 'image/png') return b[0] === 0x89 && ascii(1, 4) === 'PNG';
+  if (mime === 'image/webp') return ascii(0, 4) === 'RIFF' && ascii(8, 12) === 'WEBP';
+  if (mime === 'application/pdf') return ascii(0, 4) === '%PDF';
+  return false;
+}
+
+function normalizeWhatsapp_(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  if (digits.length < 10 || digits.length > 13) {
+    throw new Error('WhatsApp inválido. Informe DDD + número.');
+  }
+  return digits;
 }
 
 function parsePayload_(e) {
@@ -338,16 +405,17 @@ function reservarNumeros_(payload) {
 
     const numeros = parseNumeros_(payload.numeros);
     if (!numeros.length) throw new Error('Nenhum número válido informado (0000 a 9999).');
+    if (numeros.length > MAX_COTAS_POR_RESERVA) {
+      throw new Error('Máximo de ' + MAX_COTAS_POR_RESERVA + ' cotas por reserva.');
+    }
 
-    const nome = String(payload.nome || '').trim();
-    const whatsapp = String(payload.whatsapp || '').trim();
-    const observacao = String(payload.observacao || '').trim();
+    const nome = cleanText_(payload.nome, 80);
+    const observacao = cleanText_(payload.observacao, 200);
+    if (nome.length < 2) throw new Error('Nome obrigatório.');
+    const whatsapp = normalizeWhatsapp_(payload.whatsapp);
     const preco = calcularPrecoPromocional_(numeros.length);
     validarTotalInformado_(payload.valorTotal, preco.total);
     const valoresPorNumero = distribuirTotalPorCotas_(preco.total, numeros.length);
-
-    if (!nome) throw new Error('Nome obrigatório.');
-    if (!whatsapp) throw new Error('WhatsApp obrigatório.');
 
     numeros.forEach(function (numero, index) {
       const item = byNumber[numero];
@@ -399,14 +467,14 @@ function reservarNumeros_(payload) {
   }
 }
 
-/** Regras canônicas de pacotes: 10 por 180, 6 por 100, 3 por 50; sobra vale R$20. */
+/** Regras canônicas de pacotes (PACOTES_CENTAVOS): 10 por 170, 6 por 100, 3 por 50; sobra vale R$20. */
 function calcularPrecoPromocional_(quantidade) {
   const qtd = Number(quantidade);
   if (!Number.isInteger(qtd) || qtd < 1) throw new Error('Quantidade de cotas inválida.');
 
   let restante = qtd;
   let totalCentavos = 0;
-  [[10, 18000], [6, 10000], [3, 5000]].forEach(function (pacote) {
+  PACOTES_CENTAVOS.forEach(function (pacote) {
     const grupos = Math.floor(restante / pacote[0]);
     totalCentavos += grupos * pacote[1];
     restante -= grupos * pacote[0];
@@ -457,17 +525,41 @@ function enviarComprovante_(payload) {
     const numeros = parseNumeros_(payload.numeros);
     if (!numeros.length) throw new Error('Nenhum número informado para vincular ao comprovante.');
 
-    const arquivoBase64 = String(payload.arquivoBase64 || '').trim();
+    if (numeros.length > MAX_COTAS_POR_RESERVA) {
+      throw new Error('Máximo de ' + MAX_COTAS_POR_RESERVA + ' cotas por comprovante.');
+    }
+
+    const arquivoBase64 = String(payload.arquivoBase64 || '').replace(/\s+/g, '');
     const arquivoNome = sanitizeFileName_(payload.arquivoNome || 'comprovante.jpg');
-    const arquivoMime = String(payload.arquivoMime || 'image/jpeg').trim();
-    const autoConfirmar = payload.autoConfirmar === true || payload.autoConfirmar === 'true';
+    const arquivoMime = String(payload.arquivoMime || '').trim().toLowerCase();
+    // Quem decide a confirmação automática é o servidor (propriedade AUTO_CONFIRMAR), nunca o navegador.
+    const autoConfirmar = PropertiesService.getScriptProperties().getProperty('AUTO_CONFIRMAR') === 'true';
 
     if (!arquivoBase64) throw new Error('Comprovante não enviado.');
+    if (MIMES_COMPROVANTE.indexOf(arquivoMime) === -1) {
+      throw new Error('Tipo de arquivo não permitido. Envie imagem (JPG, PNG, WebP) ou PDF.');
+    }
+    if (arquivoBase64.length > Math.ceil(MAX_COMPROVANTE_BYTES * 4 / 3) + 4) {
+      throw new Error('Comprovante grande demais (máximo 5 MB).');
+    }
 
+    if (!assinaturaComprovanteValida_(arquivoBase64, arquivoMime)) {
+      throw new Error('O arquivo não parece ser uma imagem ou PDF válido.');
+    }
+
+    // O comprovante só vincula a cotas reservadas (nunca pagas/livres) pelo mesmo WhatsApp (número completo) da reserva.
+    const whatsappInformado = normalizeWhatsapp_(payload.whatsapp);
     numeros.forEach(function (numero) {
       const item = byNumber[numero];
       if (!item || item.data.status === 'livre') {
         throw new Error('A cota ' + formatCode_(numero) + ' está livre e não possui reserva pendente.');
+      }
+      if (item.data.status === 'pago') {
+        throw new Error('A cota ' + formatCode_(numero) + ' já está paga.');
+      }
+      const dono = canonicalPhone_(item.data.whatsapp);
+      if (!dono || dono !== canonicalPhone_(whatsappInformado)) {
+        throw new Error('O WhatsApp informado não confere com o da reserva da cota ' + formatCode_(numero) + '.');
       }
     });
 
@@ -479,9 +571,8 @@ function enviarComprovante_(payload) {
       const item = byNumber[numero];
       const row = normalizeRow_(item.values);
       row[COL.status] = finalStatus;
-      row[COL.nome] = String(payload.nome || row[COL.nome] || '').trim();
-      row[COL.whatsapp] = String(payload.whatsapp || row[COL.whatsapp] || '').trim();
-      row[COL.valor] = Number(row[COL.valor] || payload.valorPorNumero || VALOR_POR_NUMERO);
+      // Nome, WhatsApp e valor da reserva original são preservados (o comprovante não os sobrescreve).
+      row[COL.valor] = Number(row[COL.valor] || VALOR_POR_NUMERO);
       row[COL.data_reserva] = row[COL.data_reserva] || now;
       if (autoConfirmar) row[COL.data_pagamento] = now;
       row[COL.comprovante_nome] = arquivoNome;
@@ -506,11 +597,12 @@ function enviarComprovante_(payload) {
 function saveProofFile_(base64, name, mimeType, numeros, date) {
   const folder = getOrCreateFolder_(COMPROVANTES_FOLDER_NAME);
   const decoded = Utilities.base64Decode(base64);
+  if (decoded.length > MAX_COMPROVANTE_BYTES) throw new Error('Comprovante grande demais (máximo 5 MB).');
   const formattedNums = numeros.slice(0, 8).map(formatCode_).join('-');
   const cleanName = Utilities.formatDate(date, Session.getScriptTimeZone(), 'yyyyMMdd-HHmmss') + '-num-' + formattedNums + '-' + name;
   const blob = Utilities.newBlob(decoded, mimeType, cleanName);
+  // Comprovante é dado pessoal: fica privado na pasta do responsável (sem link público).
   const file = folder.createFile(blob);
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
   return file.getUrl();
 }
 

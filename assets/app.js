@@ -461,7 +461,11 @@
     const pricing = getPromotionPricing(numeros.length);
 
     if (!numeros.length) return showMessage("Escolha pelo menos uma cota livre.", "error");
-    if (!nome || !whatsapp) return showMessage("Preencha nome completo e WhatsApp.", "error");
+    if (nome.length < 2 || !whatsapp) return showMessage("Preencha nome completo e WhatsApp.", "error");
+    const whatsappDigits = whatsapp.replace(/\D/g, "");
+    if (whatsappDigits.length < 10 || whatsappDigits.length > 13) {
+      return showMessage("WhatsApp inválido. Informe o DDD e o número (ex.: 22 99999-9999).", "error");
+    }
 
     try {
       setLoading(true);
@@ -469,7 +473,7 @@
       const response = await apiCall("reservar", {
         numeros,
         nome,
-        whatsapp,
+        whatsapp: whatsappDigits,
         observacao,
         valorPorNumero: getValuePerNumber(),
         precoBase: pricing.base,
@@ -503,8 +507,8 @@
     } catch (error) {
       console.error(error);
       const msg = error.message || "Não foi possível reservar. Tente novamente.";
-      const match = msg.match(/número\s+(\d+)/i);
-      showMessage(match ? `A cota ${formatNumberCode(Number(match[1]))} acabou de ser escolhida. Escolha outra.` : msg, "error");
+      const match = msg.match(/(?:número|cota)\s+(\d+)/i);
+      showMessage(match && /acabou|reservad|escolhid/i.test(msg) ? `A cota ${formatNumberCode(Number(match[1]))} acabou de ser escolhida. Escolha outra.` : msg, "error");
       await safeReloadNumbers();
     } finally {
       setLoading(false);
@@ -542,9 +546,8 @@
       const response = await apiCall("enviarComprovante", {
         numeros: lastReservation.numeros,
         nome: lastReservation.nome,
-        whatsapp: lastReservation.whatsapp,
+        whatsapp: String(lastReservation.whatsapp || "").replace(/\D/g, ""),
         valorTotal: lastReservation.total,
-        autoConfirmar: Boolean(CFG.AUTO_CONFIRMAR_COM_COMPROVANTE),
         arquivoNome: fileData.name,
         arquivoMime: fileData.mimeType,
         arquivoBase64: fileData.base64
@@ -567,13 +570,16 @@
     const isImage = /^image\//i.test(file.type || "");
     if (isImage) return compressImage(file);
 
+    if ((file.type || "").toLowerCase() !== "application/pdf") {
+      throw new Error("Tipo de arquivo não aceito. Envie uma foto, print ou PDF do comprovante.");
+    }
     if (file.size > 4 * 1024 * 1024) {
       throw new Error("O arquivo está grande demais. Envie uma imagem ou PDF de até 4 MB.");
     }
     const dataUrl = await readFileAsDataUrl(file);
     return {
       name: sanitizeFileName(file.name || "comprovante.pdf"),
-      mimeType: file.type || "application/octet-stream",
+      mimeType: "application/pdf",
       base64: dataUrl.split(",")[1]
     };
   }
